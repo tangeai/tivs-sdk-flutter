@@ -9,7 +9,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.tange.ai</groupId>
   <artifactId>RapidKit</artifactId>
-  <version>1.8.0-alpha.9</version>
+  <version>1.8.0-alpha.10</version>
   <packaging>aar</packaging>
   <dependencies>
     <dependency>
