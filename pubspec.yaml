@@ -1,6 +1,6 @@
 name: rapid_kit
 description: "RAPID = Real-time Audio-visual Platform for IoT Device"
-version: 1.8.0-alpha.1
+version: 1.8.0-alpha.2
 homepage: https://tange.ai/
 
 environment:

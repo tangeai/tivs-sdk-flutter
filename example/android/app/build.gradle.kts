@@ -1,8 +1,15 @@
+import java.util.Properties
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+val rapidSigningProperties = System.getenv("RAPID_ANDROID_SIGNING_PROPERTIES")?.let { path ->
+    Properties().apply { file(path).inputStream().use { load(it) } }
 }
 
 android {
@@ -14,10 +21,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
     defaultConfig {        
@@ -32,17 +35,23 @@ android {
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.findByName("rapid_kit")
             isShrinkResources = true
             isMinifyEnabled = true
             ndk.abiFilters.clear()
             ndk.abiFilters.addAll(listOf("arm64-v8a"))
         }
         debug {
-            signingConfig = signingConfigs.getByName("debug")          
+            signingConfig = signingConfigs.findByName("rapid_kit") ?: signingConfigs.getByName("debug")
             ndk.abiFilters.clear()
             ndk.abiFilters.addAll(listOf("arm64-v8a"))            
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 
