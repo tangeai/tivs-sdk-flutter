@@ -1,0 +1,6 @@
+#include "../../Flutter/Flutter-Release.xcconfig"
+#include "Warnings.xcconfig"
+
+// rapid_kit (RapidKit.xcframework) currently only ships a macOS arm64 slice.
+// Exclude x86_64 to avoid universal (arm64+x86_64) Release builds failing.
+EXCLUDED_ARCHS[sdk=macosx*] = x86_64

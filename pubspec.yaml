@@ -1,0 +1,44 @@
+name: rapid_kit
+description: "RAPID = Real-time Audio-visual Platform for IoT Device"
+version: 1.8.0-alpha.1
+homepage: https://tange.ai/
+
+environment:
+  sdk: '>=2.19.6 <4.0.0'
+  flutter: ">=2.5.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.2
+  async: ^2.5.0
+  ffi: ^2.0.2
+  path: ^1.8.2
+  qr_flutter: ^4.1.0
+
+dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+  # ffigen: ^12.0.0
+
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.tange.ai.rapid_kit
+        pluginClass: RapidKitPlugin
+      ios:
+        pluginClass: RapidKitPlugin
+      macos:
+        pluginClass: RapidKitPlugin
+      windows:
+        pluginClass: RapidKitPluginCApi  
+      linux:
+        pluginClass: RapidKitPlugin
+      ohos:
+        package: com.tange.ai.rapid_kit
+        pluginClass: RapidKitPlugin  

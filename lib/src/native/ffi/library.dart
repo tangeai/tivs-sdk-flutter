@@ -1,0 +1,26 @@
+library rapid_kit_ffi;
+
+import 'dart:ffi' as ffi;
+import 'package:ffi/ffi.dart';
+part 'core_api_profile.dart';
+part 'core_api_chat.dart';
+part 'core_api_dart.dart';
+part 'core_api_external.dart';
+part 'core_api_debug.dart';
+part 'core_api_auth.dart';
+part 'core_api_http.dart';
+part 'core_api_initialize.dart';
+part 'core_api_instruct.dart';
+part 'core_api_lan.dart';
+part 'core_api_transmit.dart';
+part 'core_api_memory.dart';
+part 'core_api_pipe.dart';
+part 'core_api_log.dart';
+part 'core_api_stream.dart';
+part 'core_api_persistent.dart';
+part 'core_api_stats.dart';
+part 'media_api_capture.dart';
+part 'media_api_chat.dart';
+part 'media_api_player.dart';
+part 'core_api_unauthorized.dart';
+part 'api_common_sdl_silence.dart';

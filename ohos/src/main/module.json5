@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "rapid_kit",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ]
+  }
+}

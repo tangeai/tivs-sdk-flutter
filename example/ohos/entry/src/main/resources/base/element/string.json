@@ -1,0 +1,32 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "rapid_kit"
+    },   
+    {
+      "name": "permission_reason_mic",
+      "value": "使用设备通话功能需要麦克风权限"
+    },
+    {
+      "name": "permission_reason_album",
+      "value": "需要相册权限以保存截图与录屏"
+    },
+    {
+      "name": "permission_reason_bluetooth",
+      "value": "需要蓝牙权限以进行设备配网"
+    },
+    {
+      "name": "permission_reason_location",
+      "value": "需要定位权限以进行设备配网"
+    }
+  ]
+}

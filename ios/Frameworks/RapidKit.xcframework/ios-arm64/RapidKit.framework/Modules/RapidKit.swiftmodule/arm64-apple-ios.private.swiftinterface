@@ -1,0 +1,1904 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)
+// swift-module-flags: -target arm64-apple-ios13.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name RapidKit
+import AVFoundation
+import CoreBluetooth
+import CoreImage
+import Darwin
+import Foundation
+import Metal
+import Photos
+@_exported import RapidKit
+import Swift
+import SwiftUI
+import UIKit
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc public class AudioSessionManager : ObjectiveC.NSObject {
+  @objc public static let shared: RapidKit.AudioSessionManager
+  @objc public func retainSession()
+  @objc public func releaseSession()
+  public func retainVoiceProcessing() -> Swift.Bool
+  public func releaseVoiceProcessing()
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @objc public class AccessPointTransportError : ObjectiveC.NSObject {
+  @objc public static let errorTimeout: Swift.Int
+  @objc public static let errorUserInvalid: Swift.Int
+  @objc public static let errorNotPrepared: Swift.Int
+  @objc public static let errorSentError: Swift.Int
+  @objc override dynamic public init()
+  @objc deinit
+}
+public typealias OnAccessPointTransportResultListener = (RapidKit.Ret) -> Swift.Void
+@objc @_inheritsConvenienceInitializers @objcMembers public class AccessPointTransport : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc public func listen(_ listener: @escaping RapidKit.OnAccessPointTransportResultListener)
+  @objc public var listener: RapidKit.OnAccessPointTransportResultListener? {
+    @objc get
+    @objc set
+  }
+  @objc public func prepare(ssid: Swift.String, password: Swift.String, bindingToken: Swift.String)
+  @objc public func start()
+  @objc public func stop()
+  @objc public func destroy()
+  @objc public static func create() -> RapidKit.AccessPointTransport
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class BindingStatePolling : ObjectiveC.NSObject {
+  @objc public func setListener(_ completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: Swift.String?) -> Swift.Void)
+  @objc public func start()
+  @objc public func stop()
+  @objc public static func create(bindingToken: Swift.String) -> RapidKit.BindingStatePolling
+  @objc deinit
+}
+@objc @objcMembers public class BleDevice : ObjectiveC.NSObject {
+  @objc final public let name: Swift.String
+  @objc final public let id: Swift.String
+  @objc public init(name: Swift.String, id: Swift.String)
+  @objc override dynamic public func isEqual(_ object: Any?) -> Swift.Bool
+  @objc deinit
+}
+@objc public protocol BleDeviceFilter {
+  @objc func accept(name: Swift.String) -> Swift.Bool
+}
+@_inheritsConvenienceInitializers @objc public class DefaultBleDeviceFilter : ObjectiveC.NSObject, RapidKit.BleDeviceFilter {
+  @objc public func accept(name: Swift.String) -> Swift.Bool
+  @objc override dynamic public init()
+  @objc deinit
+}
+public typealias OnBleDiscoveryRefreshListener = ([RapidKit.BleDevice]) -> Swift.Void
+public typealias OnBleDiscoveryTimeoutListener = () -> Swift.Void
+@objc @_inheritsConvenienceInitializers @objcMembers public class BleDiscovery : ObjectiveC.NSObject, CoreBluetooth.CBCentralManagerDelegate {
+  @objc override dynamic public init()
+  @objc public func setFilter(_ filter: any RapidKit.BleDeviceFilter)
+  @objc public func setOnRefresh(_ listener: @escaping RapidKit.OnBleDiscoveryRefreshListener)
+  @objc public func setOnTimeout(_ listener: @escaping RapidKit.OnBleDiscoveryTimeoutListener)
+  @objc public func start()
+  @objc public func stop()
+  @objc public func centralManagerDidUpdateState(_ central: CoreBluetooth.CBCentralManager)
+  @objc public func centralManager(_ central: CoreBluetooth.CBCentralManager, didDiscover peripheral: CoreBluetooth.CBPeripheral, advertisementData: [Swift.String : Any], rssi RSSI: Foundation.NSNumber)
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class BleTransportError : ObjectiveC.NSObject {
+  @objc public static let errorNotPrepared: Swift.Int
+  @objc public static let errorConnectTimeout: Swift.Int
+  @objc public static let errorSentTimeout: Swift.Int
+  @objc override dynamic public init()
+  @objc deinit
+}
+public typealias OnBleTransportResultListener = (RapidKit.Ret) -> Swift.Void
+@objc @objcMembers public class BleTransport : ObjectiveC.NSObject, CoreBluetooth.CBCentralManagerDelegate, CoreBluetooth.CBPeripheralDelegate {
+  @objc public init(_ mac: Swift.String)
+  @objc public func setCharacteristics(_ characteristics: [Swift.String])
+  @objc public func setListener(_ listener: @escaping RapidKit.OnBleTransportResultListener)
+  @objc public func prepare(ssid: Swift.String, password: Swift.String, bindingToken: Swift.String)
+  @objc public func start()
+  @objc public func stop()
+  @objc public static func create(id: Swift.String) -> RapidKit.BleTransport
+  @objc public func centralManagerDidUpdateState(_ central: CoreBluetooth.CBCentralManager)
+  @objc public func centralManager(_ central: CoreBluetooth.CBCentralManager, didDiscover peripheral: CoreBluetooth.CBPeripheral, advertisementData: [Swift.String : Any], rssi RSSI: Foundation.NSNumber)
+  @objc public func centralManager(_ central: CoreBluetooth.CBCentralManager, didConnect peripheral: CoreBluetooth.CBPeripheral)
+  @objc public func centralManager(_ central: CoreBluetooth.CBCentralManager, didDisconnectPeripheral peripheral: CoreBluetooth.CBPeripheral, error: (any Swift.Error)?)
+  @objc public func centralManager(_ central: CoreBluetooth.CBCentralManager, didFailToConnect peripheral: CoreBluetooth.CBPeripheral, error: (any Swift.Error)?)
+  @objc public func peripheral(_ peripheral: CoreBluetooth.CBPeripheral, didDiscoverServices error: (any Swift.Error)?)
+  @objc public func peripheral(_ peripheral: CoreBluetooth.CBPeripheral, didDiscoverCharacteristicsFor service: CoreBluetooth.CBService, error: (any Swift.Error)?)
+  @objc public func peripheral(_ peripheral: CoreBluetooth.CBPeripheral, didWriteValueFor characteristic: CoreBluetooth.CBCharacteristic, error: (any Swift.Error)?)
+  @objc public func peripheralIsReady(toSendWriteWithoutResponse peripheral: CoreBluetooth.CBPeripheral)
+  @objc deinit
+}
+public typealias IncomingCallListener = (RapidKit.IncomingCall) -> Swift.Void
+public typealias IncomingCallEventListener = (RapidKit.IncomingCallEvent) -> Swift.Void
+public typealias OutgoingCallEventListener = (RapidKit.OutgoingCallEvent) -> Swift.Void
+public typealias ConnectedCallEventListener = (RapidKit.ConnectedCallEvent) -> Swift.Void
+public struct OutgoingCallOptions {
+  public static let defaultTimeoutSeconds: Swift.Int
+  public var timeoutSeconds: Swift.Int
+  public init(timeoutSeconds: Swift.Int = OutgoingCallOptions.defaultTimeoutSeconds)
+}
+@_hasMissingDesignatedInitializers final public class CallListenerToken {
+  final public func invalidate()
+  @objc deinit
+}
+public struct IncomingCallContext {
+  public let deviceId: Swift.String
+  public init(deviceId: Swift.String)
+}
+public enum CallEndReason : Swift.Int {
+  case cancelledByLocal
+  case rejectedByLocal
+  case hangupByLocal
+  case cancelledByRemote
+  case rejectedByRemote
+  case hangupByRemote
+  case missed
+  case busy
+  case answeredByElsewhere
+  case connectFailed
+  case outgoingRequestFailed
+  case operationFailed
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum IncomingCallState : Swift.Int {
+  case ringing
+  case connected
+  case ended
+  case failed
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum OutgoingCallState : Swift.Int {
+  case dialing
+  case ringing
+  case connected
+  case ended
+  case failed
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum ConnectedCallState : Swift.Int {
+  case active
+  case ended
+  case failed
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public struct IncomingCallEvent {
+  public let deviceId: Swift.String
+  public let state: RapidKit.IncomingCallState
+  public let endReason: RapidKit.CallEndReason?
+  public init(deviceId: Swift.String, state: RapidKit.IncomingCallState, endReason: RapidKit.CallEndReason? = nil)
+}
+public struct OutgoingCallEvent {
+  public let deviceId: Swift.String
+  public let state: RapidKit.OutgoingCallState
+  public let endReason: RapidKit.CallEndReason?
+  public init(deviceId: Swift.String, state: RapidKit.OutgoingCallState, endReason: RapidKit.CallEndReason? = nil)
+}
+public struct ConnectedCallEvent {
+  public let deviceId: Swift.String
+  public let state: RapidKit.ConnectedCallState
+  public let endReason: RapidKit.CallEndReason?
+  public init(deviceId: Swift.String, state: RapidKit.ConnectedCallState, endReason: RapidKit.CallEndReason? = nil)
+}
+@_hasMissingDesignatedInitializers final public class CallObserver {
+  @discardableResult
+  public static func addIncomingListener(_ listener: @escaping RapidKit.IncomingCallListener) -> RapidKit.CallListenerToken
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers final public class ConnectedCall {
+  final public var deviceId: Swift.String {
+    get
+  }
+  final public var state: RapidKit.ConnectedCallState {
+    get
+  }
+  final public var endReason: RapidKit.CallEndReason? {
+    get
+  }
+  final public var pipe: RapidKit.Pipe {
+    get
+  }
+  final public var isTerminal: Swift.Bool {
+    get
+  }
+  @discardableResult
+  final public func addListener(_ listener: @escaping RapidKit.ConnectedCallEventListener) -> RapidKit.CallListenerToken
+  final public func bindLiveStream(_ stream: RapidKit.LiveStream?)
+  final public func hangup(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers final public class IncomingCall {
+  public static func create(context: RapidKit.IncomingCallContext) -> RapidKit.IncomingCall
+  final public var deviceId: Swift.String {
+    get
+  }
+  final public var state: RapidKit.IncomingCallState {
+    get
+  }
+  final public var endReason: RapidKit.CallEndReason? {
+    get
+  }
+  final public var connectedCall: RapidKit.ConnectedCall? {
+    get
+  }
+  final public var isTerminal: Swift.Bool {
+    get
+  }
+  @discardableResult
+  final public func addListener(_ listener: @escaping RapidKit.IncomingCallEventListener) -> RapidKit.CallListenerToken
+  final public func accept(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  final public func reject(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  final public func waitConnectedCall(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.ConnectedCall?) -> Swift.Void)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers final public class OutgoingCall {
+  public static func start(deviceId: Swift.String, options: RapidKit.OutgoingCallOptions = OutgoingCallOptions(), completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.OutgoingCall?) -> Swift.Void)
+  final public var deviceId: Swift.String {
+    get
+  }
+  final public var state: RapidKit.OutgoingCallState {
+    get
+  }
+  final public var endReason: RapidKit.CallEndReason? {
+    get
+  }
+  final public var connectedCall: RapidKit.ConnectedCall? {
+    get
+  }
+  final public var isTerminal: Swift.Bool {
+    get
+  }
+  @discardableResult
+  final public func addListener(_ listener: @escaping RapidKit.OutgoingCallEventListener) -> RapidKit.CallListenerToken
+  final public func cancel(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  final public func waitConnectedCall(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.ConnectedCall?) -> Swift.Void)
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class Assistant : ObjectiveC.NSObject {
+  @objc public static let LOG_UPLOAD_FAILED: Swift.Int32
+  @objc public static let LOG_UPLOAD_NULL_RESPONSE: Swift.Int32
+  @objc public static func uploadLogs(completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: Swift.String?) -> Swift.Void)
+  @objc public static func createDebuggingCode() -> Swift.String
+  @objc public static func applyDebuggingCode(_ code: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.VerifiedToken?) -> Swift.Void)
+  @objc public static func showEntry(from viewController: UIKit.UIViewController)
+  @objc public static func showUploadResult(from viewController: UIKit.UIViewController, success: Swift.Bool, code: Swift.Int32, message: Swift.String?, data: Swift.String?)
+  @available(iOS 13.0, *)
+  public static func assistantDialogView() -> some SwiftUI.View
+  
+  @objc override dynamic public init()
+  @objc deinit
+}
+@available(iOS 13.0, *)
+public struct AssistantDialogView : SwiftUI.View {
+  @_Concurrency.MainActor(unsafe) public var body: some SwiftUI.View {
+    get
+  }
+  public typealias Body = @_opaqueReturnTypeOf("$s8RapidKit19AssistantDialogViewV4bodyQrvp", 0) __
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class Logging : ObjectiveC.NSObject {
+  @objc public static func i(_ tag: Swift.String, _ message: Swift.String)
+  @objc public static func d(_ tag: Swift.String, _ message: Swift.String)
+  @objc public static func w(_ tag: Swift.String, _ message: Swift.String)
+  @objc public static func e(_ tag: Swift.String, _ message: Swift.String)
+  @objc public static func v(_ tag: Swift.String, _ message: Swift.String)
+  @objc public static func f(_ tag: Swift.String, _ message: Swift.String)
+  @objc override dynamic public init()
+  @objc deinit
+}
+public enum ObservationLevel : Swift.Int {
+  case info
+  case warn
+  case error
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public struct ObservationEvent {
+  public let id: Swift.String
+  public let group: Swift.String
+  public let label: Swift.String
+  public let level: RapidKit.ObservationLevel
+  public let deviceId: Swift.String
+  public let timestamp: Swift.Int64
+  public let ext: Swift.String
+}
+public enum Observability {
+  public static func poll(_ deviceId: Swift.String) -> Swift.Bool
+  public static func all(_ deviceId: Swift.String) -> [RapidKit.ObservationEvent]
+  public static func latest(_ deviceId: Swift.String) -> RapidKit.ObservationEvent?
+  public static func formatTime(_ timestamp: Swift.Int64) -> Swift.String
+}
+@objc @objcMembers public class VerifiedToken : ObjectiveC.NSObject {
+  @objc final public let userId: Swift.Int32
+  @objc final public let issueAt: Swift.Int32
+  @objc final public let expiresIn: Swift.Int32
+  @objc final public let success: Swift.Bool
+  @objc final public let message: Swift.String?
+  final public let code: Swift.Int32?
+  @objc public init(from response: RapidKit.RAPID_Core_AuthResp)
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class Authenticate : ObjectiveC.NSObject {
+  @objc public static let unauthorizedNotification: Foundation.NSNotification.Name
+  @objc public static func configure(accessToken: Swift.String) -> RapidKit.VerifiedToken
+  @objc public static var currentAccessToken: Swift.String? {
+    @objc get
+  }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class Core : ObjectiveC.NSObject {
+  @objc public static func initialize(appId: Swift.String, packageName: Swift.String, language: Swift.String = "zh-cn", debugging: Swift.Bool = false, environment: Swift.Int32 = 0) -> Swift.Bool
+  @objc public static var versionName: Swift.String {
+    @objc get
+  }
+  @objc public static var buildId: Swift.String {
+    @objc get
+  }
+  @objc public static var commitHash: Swift.String {
+    @objc get
+  }
+  @objc public static var appId: Swift.String {
+    @objc get
+  }
+  @objc public static var packageName: Swift.String {
+    @objc get
+  }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public enum CloudReplayCaptureState : Swift.Int {
+  case idle
+  case started
+  case completed
+  case error
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public typealias CloudReplayCaptureStateListener = (RapidKit.CloudReplayCaptureState) -> Swift.Void
+public typealias CloudReplayCaptureProgressListener = (Swift.Double) -> Swift.Void
+@objc @_hasMissingDesignatedInitializers @objcMembers final public class CloudReplayCapture : ObjectiveC.NSObject {
+  @objc final public var recordedFilePath: Swift.String? {
+    get
+  }
+  @objc public static func create(stream: RapidKit.CloudReplayStream, cameraIndex: Swift.UInt32 = 0) -> RapidKit.CloudReplayCapture
+  @objc final public func setOnState(_ listener: @escaping RapidKit.CloudReplayCaptureStateListener)
+  @objc final public func setOnProgress(_ listener: @escaping RapidKit.CloudReplayCaptureProgressListener)
+  @objc final public func start(startTimestampInSecond: Swift.Int, endTimestampInSecond: Swift.Int, outputFilePath: Swift.String) -> Swift.Bool
+  @objc final public func stop()
+  @objc final public func destroy()
+  @objc deinit
+}
+@objc public enum ReplaySpeed : Swift.Int {
+  case x1 = 0
+  case x2 = 1
+  case x4 = 2
+  case x8 = 3
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class BasePlayer : ObjectiveC.NSObject {
+  @objc public func setVideoDecoderPreference(_ preference: RapidKit.VideoDecoderPreference)
+  @objc public func setupSingleStream()
+  @objc public func setupDualStream()
+  @objc public func setupTripleStream()
+  @objc public func start()
+  @objc public func stop()
+  @objc public func destroy()
+  @objc public func isMute() -> Swift.Bool
+  @objc public func setMute(_ mute: Swift.Bool)
+  @objc public func onRenderStateUpdate(listener: @escaping (RapidKit.RenderState) -> Swift.Void)
+  @objc public func state() -> RapidKit.RenderState
+  @objc public func onUtsUpdate(listener: @escaping (Swift.Int64) -> Swift.Void)
+  @objc public func enableVideo(_ enable: Swift.Bool)
+  @objc public func getSpeed() -> RapidKit.ReplaySpeed
+  @objc public func setSpeed(_ speed: RapidKit.ReplaySpeed)
+  @objc public func captureToFile(playerIndex: Swift.Int = 0) -> Swift.String?
+  @objc public func stopRecordToFile(playerIndex: Swift.Int = 0) -> Swift.String?
+  @objc public func capture(playerIndex: Swift.Int = 0, completion: @escaping (Swift.Bool) -> Swift.Void)
+  @objc public func startRecord(playerIndex: Swift.Int = 0) -> Swift.Bool
+  @objc public func recordDurationMs(playerIndex: Swift.Int = 0) -> Swift.Int64
+  @objc public func setRecordDurationListener(playerIndex: Swift.Int = 0, listener: @escaping (Swift.Int64) -> Swift.Void)
+  @objc public func stopRecord(playerIndex: Swift.Int = 0, completion: @escaping (Swift.Bool) -> Swift.Void)
+  @objc public func setupStream(useSharedChannel: [Swift.Bool] = [])
+  @objc public func uiKitView(playerIndex: Swift.Int = 0) -> UIKit.UIView?
+  public func swiftUIView(playerIndex: Swift.Int = 0) -> SwiftUI.AnyView
+  @objc public func attach(to containers: [UIKit.UIView])
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @objcMembers public class CloudReplayPlayer : RapidKit.BasePlayer {
+  @objc public init(deviceId: Swift.String)
+  @objc override public func getSpeed() -> RapidKit.ReplaySpeed
+  @objc override public func setSpeed(_ speed: RapidKit.ReplaySpeed)
+  @objc public func onChunkNotFound(listener: @escaping (Swift.Int) -> Swift.Void)
+  @objc public func onDownloadComplete(listener: @escaping () -> Swift.Void)
+  @objc public func onRetrieveError(listener: @escaping (Swift.Int) -> Swift.Void)
+  @objc public func prepare(startTimestamp: Swift.Int, endTimestamp: Swift.Int, storageId: Swift.String, fileNameList: [Swift.String]? = nil)
+  @objc override public func start()
+  @objc public func pause()
+  @objc public func resume()
+  @objc public func seek(timestampInSecond: Swift.Int)
+  @objc public func listRecords(date: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.CloudRecordIndexPacket?) -> Swift.Void)
+  @objc override public func destroy()
+  @objc deinit
+}
+@objc @objcMembers public class LivePlayer : RapidKit.BasePlayer {
+  @objc public init(deviceId: Swift.String, pipe: RapidKit.Pipe, audioEnable: Swift.Bool = true)
+  @objc public var liveStream: RapidKit.LiveStream? {
+    @objc get
+  }
+  @objc override public func setupDualStream()
+  @objc public func highQuality()
+  @objc public func lowQuality()
+  @objc public func onPixelSizeChanged(listener: @escaping (Swift.Int, Swift.Int) -> Swift.Void)
+  @objc public func switchQuality(_ quality: Swift.Int)
+  @objc public func currentQuality() -> Swift.Int
+  @objc public func enableVoiceChatAudioMode(enable: Swift.Bool)
+  @objc override public func start()
+  @objc override public func destroy()
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class LocalReplayPlayer : RapidKit.BasePlayer {
+  @objc @available(*, deprecated, message: "Device time zone is required. Use init(deviceId:pipe:audioEnable:timeZone:).")
+  convenience public init(deviceId: Swift.String, pipe: RapidKit.Pipe, audioEnable: Swift.Bool = true)
+  @objc convenience public init(deviceId: Swift.String, pipe: RapidKit.Pipe, audioEnable: Swift.Bool = true, timeZone: Foundation.TimeZone)
+  @objc override public func getSpeed() -> RapidKit.ReplaySpeed
+  @objc override public func setSpeed(_ speed: RapidKit.ReplaySpeed)
+  @objc public func setRange(startTimestamp: Swift.Int, endTimestamp: Swift.Int)
+  @objc public func pause()
+  @objc public func resume()
+  @objc public func seek(timestampInSecond: Swift.Int)
+  @objc public func seek(timestampInSecond: Swift.Int, startMode: RapidKit.LocalReplayStartMode)
+  @objc override public func destroy()
+  @objc public func compatibleOnResumeInstruct()
+  @objc deinit
+}
+public enum DeviceAudioCapability {
+  public static func streamAudioEnabled(fromDeviceAbilities deviceAbilities: Swift.String?) -> Swift.Bool
+  public static func streamAudioEnabled(fromFeatures features: [Swift.String : Any]?, defaultValue: Swift.Bool = true) -> Swift.Bool
+}
+@objc public enum LocalReplayCaptureState : Swift.Int {
+  case idle
+  case started
+  case completed
+  case error
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public typealias LocalReplayCaptureStateListener = (RapidKit.LocalReplayCaptureState) -> Swift.Void
+public typealias LocalReplayCaptureProgressListener = (Swift.Double) -> Swift.Void
+@objc @_hasMissingDesignatedInitializers @objcMembers final public class LocalReplayCapture : ObjectiveC.NSObject {
+  @objc final public var recordedFilePath: Swift.String? {
+    get
+  }
+  @objc public static func create(stream: RapidKit.LocalReplayStream, cameraIndex: Swift.UInt32 = 0) -> RapidKit.LocalReplayCapture
+  @objc final public func setOnState(_ listener: @escaping RapidKit.LocalReplayCaptureStateListener)
+  @objc final public func setOnProgress(_ listener: @escaping RapidKit.LocalReplayCaptureProgressListener)
+  @objc final public func start(startTimestampInSecond: Swift.Int, endTimestampInSecond: Swift.Int, outputFilePath: Swift.String) -> Swift.Bool
+  @objc final public func stop()
+  @objc final public func destroy()
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class MediaChat : ObjectiveC.NSObject {
+  @objc public enum AudioSampleRate : Swift.Int {
+    case rate8k = 0
+    case rate16k = 1
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  @objc @available(*, deprecated, message: "Use MediaChat.create(pipe:sampleRate:) instead.")
+  public static func create(pipe: RapidKit.Pipe, livePlayer: RapidKit.LivePlayer?, sampleRate: RapidKit.MediaChat.AudioSampleRate = .rate8k, aecEnable: Swift.Bool = false) -> RapidKit.MediaChat
+  @objc public static func create(pipe: RapidKit.Pipe, sampleRate: RapidKit.MediaChat.AudioSampleRate = .rate8k, playbackPlayer: RapidKit.Player? = nil) -> RapidKit.MediaChat
+  @objc public func destroy()
+  @objc public func started() -> Swift.Bool
+  @objc public func startDump() -> Swift.Bool
+  @objc public func stopDump() -> Swift.Bool
+  @objc public func start()
+  @objc public func stop()
+  @objc public func configureAudioProcessing(nsLevel: Swift.Int, aecLevel: Swift.Int, agcLevel: Swift.Int)
+  @objc deinit
+}
+@objc public enum RenderState : Swift.Int {
+  case started = 0, buffering, completed, paused
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum VideoDecoderPreference : Swift.Int {
+  case auto = 0, software = 1, hardware = 2
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class Player : ObjectiveC.NSObject {
+  @objc public static func create() -> RapidKit.Player
+  @objc public func uiKitTexture() -> UIKit.UIView
+  @objc public func prepare(provider: RapidKit.StreamProvider)
+  @objc public func start()
+  @objc public func setVideoDecoderPreference(_ preference: RapidKit.VideoDecoderPreference)
+  @objc public func stop()
+  @objc public func pause()
+  @objc public func resume()
+  @objc public func setMute(_ mute: Swift.Bool)
+  @objc public func isMute() -> Swift.Bool
+  @objc public func enableBuffering(_ enable: Swift.Bool)
+  @objc public func setAutoBufferingMax(_ value: Swift.Int)
+  @objc public func enableAudio(_ enable: Swift.Bool)
+  @objc public func configureAudioProcessing(nsLevel: Swift.Int, agcLevel: Swift.Int)
+  @objc public func enableVideo(_ enable: Swift.Bool)
+  @objc public func getPixelWidth() -> Swift.Int
+  @objc public func getPixelHeight() -> Swift.Int
+  @objc public func startDump() -> Swift.Bool
+  @objc public func stopDump() -> Swift.Bool
+  @_spi(RapidDiagnostics) @nonobjc public func enableVideoFrameDump(_ enable: Swift.Bool)
+  @objc public func runtimeMetrics() -> Swift.String?
+  @objc public func setRenderStateListener(_ callback: @escaping (RapidKit.RenderState) -> Swift.Void)
+  @objc public func state() -> RapidKit.RenderState
+  @objc public func setPixelSizeListener(_ callback: @escaping (Swift.Int, Swift.Int) -> Swift.Void)
+  @objc public func setPtsListener(_ callback: @escaping (Swift.Int64) -> Swift.Void)
+  @objc public func setUtsListener(_ callback: @escaping (Swift.Int64) -> Swift.Void)
+  @objc public func setRecordDurationListener(_ callback: @escaping (Swift.Int64) -> Swift.Void)
+  @objc public func startRecord() -> Swift.Bool
+  @objc public func recordDurationMs() -> Swift.Int64
+  @objc public func stopRecordToFile() -> Swift.String?
+  @objc public func stopRecord(completion: @escaping (Swift.String?) -> Swift.Void)
+  @objc public func captureToFile() -> Swift.String?
+  @objc public func capture(completion: @escaping (Swift.Bool) -> Swift.Void)
+  @objc public func destroy()
+  @objc public func bindingPrimaryPlayer(_ primaryPlayer: RapidKit.Player)
+  public func swiftUiTexture() -> some SwiftUI.View
+  
+  @objc deinit
+}
+public struct RapidGLView : SwiftUI.UIViewRepresentable {
+  public init(setupLayer: @escaping (QuartzCore.CAEAGLLayer) -> Swift.Void)
+  @_Concurrency.MainActor(unsafe) public func makeCoordinator() -> RapidKit.RapidGLView.Coordinator
+  @_Concurrency.MainActor(unsafe) public func makeUIView(context: RapidKit.RapidGLView.Context) -> UIKit.UIView
+  @_Concurrency.MainActor(unsafe) public func updateUIView(_ uiView: UIKit.UIView, context: RapidKit.RapidGLView.Context)
+  @objc @_inheritsConvenienceInitializers public class Coordinator : ObjectiveC.NSObject {
+    @objc override dynamic public init()
+    @objc deinit
+  }
+  public typealias Body = Swift.Never
+  public typealias UIViewType = UIKit.UIView
+}
+@objc @objcMembers public class Ret : ObjectiveC.NSObject {
+  @objc final public let success: Swift.Bool
+  final public let code: Swift.Int32?
+  @objc final public let message: Swift.String?
+  public init(success: Swift.Bool, code: Swift.Int32? = nil, message: Swift.String? = nil)
+  @objc public static func success() -> RapidKit.Ret
+  @objc public static func error(_ code: Swift.Int32, _ message: Swift.String) -> RapidKit.Ret
+  @objc override dynamic public var description: Swift.String {
+    @objc get
+  }
+  @objc deinit
+}
+public typealias OnResultListener = (RapidKit.Ret) -> Swift.Void
+@objc @_inheritsConvenienceInitializers @objcMembers public class VerificationCode : ObjectiveC.NSObject, Swift.Codable {
+  public var expiresInSeconds: Swift.Int?
+  public var requireRobotCheck: Swift.Bool?
+  public var accountExist: Swift.Bool?
+  @objc override dynamic public init()
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class LoginRet : ObjectiveC.NSObject, Swift.Codable {
+  public var expiresInSeconds: Swift.Int?
+  @objc public var accessToken: Swift.String?
+  @objc override dynamic public init()
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class UserInfo : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var id: Swift.String?
+  @objc public var nickName: Swift.String?
+  @objc public var account: Swift.String?
+  @objc override dynamic public init()
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class AccountService : ObjectiveC.NSObject {
+  @objc public static let sceneRegister: Swift.String
+  @objc public static let sceneForgetPassword: Swift.String
+  @objc public static let areaCodeDefault: Swift.String
+  @objc public static let countryCodeDefault: Swift.String
+  @objc public static func requireCode(account: Swift.String?, scene: Swift.String, areaCode: Swift.String? = "86", completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.VerificationCode?) -> Swift.Void)
+  @objc public static func register(account: Swift.String, verificationCode: Swift.String, password: Swift.String, areaCode: Swift.String? = "86", countryCode: Swift.String? = "CN", completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func delete(completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func login(account: Swift.String, password: Swift.String, areaCode: Swift.String? = "86", completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.LoginRet?) -> Swift.Void)
+  @objc public static func logout(completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func resetPassword(account: Swift.String, verificationCode: Swift.String, password: Swift.String, areaCode: Swift.String? = "86", completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func changePassword(oldPassword: Swift.String, newPassword: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func detail(completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.UserInfo?) -> Swift.Void)
+  @objc public static func changeNickname(name: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func loginViaWechat(code: Swift.String, countryCode: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.LoginRet?) -> Swift.Void)
+  @objc public static func loginViaGoogle(idToken: Swift.String, countryCode: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.LoginRet?) -> Swift.Void)
+  @objc public static func loginViaFacebook(idToken: Swift.String, countryCode: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.LoginRet?) -> Swift.Void)
+  @objc public static func loginViaLine(idToken: Swift.String, countryCode: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.LoginRet?) -> Swift.Void)
+  @objc public static func checkVerificationCode(account: Swift.String, scene: Swift.String, verificationCode: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public enum BindingMode : Swift.Int {
+  case modeScan = 0
+  case mode4G = 1
+  case modeLan = 2
+  case modeDevice = 3
+  case modeOther = 4
+  public var rawStringValue: Swift.String {
+    get
+  }
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class BindedResp : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var deviceId: Swift.String?
+  @objc override dynamic public init()
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class BindToken : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var token: Swift.String?
+  public var expireIn: Swift.Int?
+  @objc override dynamic public init()
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class BindingService : ObjectiveC.NSObject {
+  @objc public static func profile(wifi: Swift.String, pwd: Swift.String, bindToken: Swift.String) -> Swift.String
+  @objc public static func qrcodeUIKit(profile: Swift.String, size: CoreFoundation.CGFloat = 200.0) -> UIKit.UIImage?
+  @available(iOS 13.0, *)
+  public static func qrcodeSwiftUI(profile: Swift.String, size: CoreFoundation.CGFloat = 200.0) -> SwiftUI.Image?
+  @objc public static func token(deviceId: Swift.String?, timezone: Swift.String? = nil, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.BindToken?) -> Swift.Void)
+  @objc public static func status(bindToken: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.BindedResp?) -> Swift.Void)
+  @objc public static func unbind(deviceId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  public static func bind(deviceId: Swift.String, deviceName: Swift.String?, timezone: Swift.String? = nil, bindingMode: RapidKit.BindingMode? = nil, mustOnline: Swift.Bool? = nil, mustActived: Swift.Bool? = nil, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class Events : ObjectiveC.NSObject, Swift.Codable {
+  public var total: Swift.Int?
+  @objc public var list: [RapidKit.Event]?
+  @objc override dynamic public init()
+  required public init(from decoder: any Swift.Decoder) throws
+  public func encode(to encoder: any Swift.Encoder) throws
+  @objc deinit
+}
+@objc @objcMembers public class Categories : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var list: [RapidKit.Category]?
+  required public init(from decoder: any Swift.Decoder) throws
+  @objc public init(categories: [RapidKit.Category])
+  public func encode(to encoder: any Swift.Encoder) throws
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class Event : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var id: Swift.String?
+  @objc public var deviceId: Swift.String?
+  @objc public var storageId: Swift.String?
+  public var startTime: Swift.Int?
+  public var endTime: Swift.Int?
+  @objc public var image: Swift.String?
+  @objc public var thumbnail: Swift.String?
+  public var containsVideo: Swift.Bool?
+  @objc public var detail: RapidKit.EventDetail?
+  @objc override dynamic public init()
+  required public init(from decoder: any Swift.Decoder) throws
+  public func encode(to encoder: any Swift.Encoder) throws
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class EventDetail : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var categoryIcon: Swift.String?
+  @objc public var msg: Swift.String?
+  @objc public var categoryName: Swift.String?
+  @objc public var categoryLabel: Swift.String?
+  @objc public var extra: Swift.String?
+  @objc override dynamic public init()
+  required public init(from decoder: any Swift.Decoder) throws
+  public func encode(to encoder: any Swift.Encoder) throws
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class Category : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var categoryLabel: Swift.String?
+  @objc public var categoryName: Swift.String?
+  @objc public var categoryType: Swift.String?
+  @objc override dynamic public init()
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @objcMembers public class LocalPushConfigure : ObjectiveC.NSObject, Swift.Codable {
+  public var enable: Swift.Bool?
+  public var interval: Swift.Int?
+  @objc public var undisturbed: RapidKit.PushUndisturbed?
+  @objc public var tagWhichNeedToPush: [Swift.String]?
+  public init(enable: Swift.Bool?, interval: Swift.Int?, undisturbed: RapidKit.PushUndisturbed?, tagWhichNeedToPush: [Swift.String]?)
+  @objc public init(from remote: RapidKit.RemotePushConfigure)
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class RemotePushConfigure : ObjectiveC.NSObject, Swift.Codable {
+  public var enable: Swift.Bool?
+  public var interval: Swift.Int?
+  @objc public var undisturbed: RapidKit.PushUndisturbed?
+  @objc public var switcher: [RapidKit.PushSwitch]?
+  @objc override dynamic public init()
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class PushSwitch : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var categoryLabel: Swift.String?
+  @objc public var categoryName: Swift.String?
+  public var enable: Swift.Bool?
+  @objc override dynamic public init()
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class PushUndisturbed : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var start: Swift.String?
+  @objc public var end: Swift.String?
+  public var enable: Swift.Bool?
+  @objc override dynamic public init()
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class EventService : ObjectiveC.NSObject {
+  @objc public static func currentNotificationSettings(deviceId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.RemotePushConfigure?) -> Swift.Void)
+  @objc public static func updateNotificationSettings(deviceId: Swift.String, configure: RapidKit.LocalPushConfigure, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func catagoriesOfList(deviceIdList: [Swift.String], completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.Categories?) -> Swift.Void)
+  @objc public static func allEvents(deviceId: Swift.String, date: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.Events?) -> Swift.Void)
+  @objc public static func event(eventId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.Event?) -> Swift.Void)
+  @objc public static func listEventsByPage(deviceIdList: [Swift.String], date: Swift.String, offset: Swift.Int = 0, limit: Swift.Int = 30, catagoriesLabel: [Swift.String]? = nil, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: [RapidKit.Event]?) -> Swift.Void)
+  @objc public static func deleteList(eventIdList: [Swift.String], global: Swift.Bool = false, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func deleteRangeOfList(deviceIdList: [Swift.String], startTimestampInSecond: Swift.Int, endTimestampInSecond: Swift.Int, global: Swift.Bool = false, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class CurrentVersion : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var id: Swift.String?
+  @objc public var version: Swift.String?
+  public var sdkVersion: Swift.Int?
+  @objc override dynamic public init()
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class AvailableVersion : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var version: Swift.String?
+  @objc public var desc: Swift.String?
+  @objc override dynamic public init()
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class FirmwareVersion : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var current: RapidKit.CurrentVersion?
+  @objc public var available: RapidKit.AvailableVersion?
+  @objc override dynamic public init()
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class DeviceUpgradeStatus : ObjectiveC.NSObject, Swift.Codable {
+  public var status: Swift.Int?
+  @objc public var desc: Swift.String?
+  @objc public var currentVersion: Swift.String?
+  public var upgradeTime: Swift.Int?
+  public var progress: Swift.Int?
+  @objc override dynamic public init()
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class FirmwareService : ObjectiveC.NSObject {
+  @objc public static func queryCurrentVersion(deviceId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.FirmwareVersion?) -> Swift.Void)
+  @objc public static func queryUpgradeStatus(deviceId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.DeviceUpgradeStatus?) -> Swift.Void)
+  @objc public static func performUpgrade(deviceId: Swift.String, version: Swift.String, immediate: Swift.Bool = true, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class FirmwareStatePolling {
+  public func listen(_ listener: @escaping RapidKit.OnResultListener)
+  public func listen_progress(_ listener: ((Swift.Int) -> Swift.Void)?)
+  public func setPollingDuration(_ duration: Swift.Int) throws
+  public func start()
+  public func stop()
+  public static func create(deviceId: Swift.String, targetVersion: Swift.String) -> RapidKit.FirmwareStatePolling
+  @objc deinit
+}
+@objc public enum HttpMethod : Swift.Int {
+  case get = 0, post = 1, delete = 2, patch = 3
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class HttpBuilder : ObjectiveC.NSObject {
+  @objc public static func create() -> RapidKit.HttpBuilder
+  @objc public func path(_ path: Swift.String) -> RapidKit.HttpBuilder
+  @objc public func header(_ key: Swift.String, value: Swift.String) -> RapidKit.HttpBuilder
+  @objc public func params(_ params: [Swift.String : Any]) -> RapidKit.HttpBuilder
+  @objc public func param(_ key: Swift.String, value: Any) -> RapidKit.HttpBuilder
+  @objc public func get(completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: Swift.String?) -> Swift.Void)
+  @objc public func post(completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: Swift.String?) -> Swift.Void)
+  @objc public func patch(completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: Swift.String?) -> Swift.Void)
+  @objc public func delete(completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: Swift.String?) -> Swift.Void)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class Http : ObjectiveC.NSObject {
+  @objc public static func create() -> RapidKit.HttpBuilder
+  @objc public static func enableLogging(enable: Swift.Bool)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class PushNotificationService : ObjectiveC.NSObject {
+  @objc public static let notificationChannelAliyun: Swift.String
+  @objc public static let notificationChannelApple: Swift.String
+  @objc public static func associate(deviceID: Swift.String, notificationChannel: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func associate(deviceID: Swift.String, notificationChannel: Swift.String, isTest: Swift.Bool, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class Recipient : ObjectiveC.NSObject, Swift.Codable {
+  public var shareId: Swift.Int?
+  @objc public var shareTime: Swift.String?
+  public var shareType: Swift.Int?
+  @objc public var nickName: Swift.String?
+  public var userId: Swift.Int?
+  @objc public static let typePreShare: Swift.Int
+  @objc public static let typeShared: Swift.Int
+  @objc public static let typeRequestShare: Swift.Int
+  @objc override dynamic public init()
+  required public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class SharingOverview : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var list: [RapidKit.Recipient]?
+  @objc public var total: Swift.Int
+  @objc override dynamic public init()
+  required public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class InviteCodeResp : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var code: Swift.String?
+  @objc override dynamic public init()
+  required public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class InviteCodeDetail : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var createdAt: Swift.String?
+  @objc public var expiresAt: Swift.String?
+  @objc public var deviceName: [Swift.String]?
+  @objc public var ownerNickName: Swift.String?
+  @objc public var ownerUserId: Swift.String?
+  @objc override dynamic public init()
+  required public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class SharingService : ObjectiveC.NSObject {
+  @objc public static func overview(deviceId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.SharingOverview?) -> Swift.Void)
+  public static func to(deviceId: Swift.String, userId: Swift.Int? = nil, userName: Swift.String? = nil, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func generateInvitation(deviceId: Swift.String, expiredSeconds: Swift.Int = 60 * 10, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ invitationCode: Swift.String?) -> Swift.Void)
+  @objc public static func peekInvitation(code: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.InviteCodeDetail?) -> Swift.Void)
+  @objc public static func acceptInvitation(code: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func removeRecipient(deviceId: Swift.String, shareId: Swift.Int, shareType: Swift.Int, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func leaveSharing(deviceId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func acceptRequest(shareId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func rejectRequest(shareId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func requestSharing(deviceId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @objcMembers public class PrimaryByPage : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var list: [RapidKit.Primary]
+  @objc public var total: Swift.Int
+  @objc public init(list: [RapidKit.Primary], total: Swift.Int)
+  required public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+@objc @objcMembers public class Primary : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var deviceId: Swift.String
+  @objc public var deviceName: Swift.String
+  @objc public var connectionMode: Swift.String
+  @objc public var productName: Swift.String
+  @objc public var productKey: Swift.String
+  @objc public var categoryName: Swift.String
+  @objc public var categoryKey: Swift.String
+  @objc public var categoryMatch: Swift.Bool
+  @objc public var categoryMsg: Swift.String
+  @objc public var isOwner: Swift.Bool
+  @objc public var deviceAbilities: Swift.String
+  @objc public var deviceAttributes: Swift.String
+  @objc public var extraDeviceAttributes: Swift.String
+  @objc public var aiAbilities: Swift.String
+  @objc public var extendAbilities: Swift.String
+  @objc public init(deviceId: Swift.String, deviceName: Swift.String, connectionMode: Swift.String, productName: Swift.String, productKey: Swift.String, categoryName: Swift.String, categoryKey: Swift.String, categoryMatch: Swift.Bool, categoryMsg: Swift.String, isOwner: Swift.Bool, deviceAbilities: Swift.String, deviceAttributes: Swift.String, extraDeviceAttributes: Swift.String, aiAbilities: Swift.String, extendAbilities: Swift.String)
+  required public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+@objc @objcMembers public class Thumbnail : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var url: Swift.String
+  @objc public var updateAt: Swift.Int
+  @objc public init(url: Swift.String, updateAt: Swift.Int)
+  required public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+@objc @objcMembers public class Timezone : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var timezone: Swift.String
+  @objc public var deviceTime: Swift.String
+  @objc public init(timezone: Swift.String, deviceTime: Swift.String)
+  required public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+@objc @objcMembers public class DeviceIccId : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var iccId: Swift.String?
+  @objc public init(iccId: Swift.String?)
+  required public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+@objc @objcMembers public class OnlineStatus : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var isOnline: Swift.Bool
+  @objc public var onlineAt: Swift.Int
+  @objc public var offlineAt: Swift.Int
+  @objc public init(isOnline: Swift.Bool, onlineAt: Swift.Int, offlineAt: Swift.Int)
+  required public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+@objc @objcMembers public class BatteryStatus : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var level: Swift.Int
+  @objc public var isLow: Swift.Bool
+  @objc public var isCharging: Swift.Bool
+  @objc public init(level: Swift.Int, isLow: Swift.Bool, isCharging: Swift.Bool)
+  required public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+@objc @objcMembers public class SimData : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var iccId: Swift.String?
+  @objc public var carrier: Swift.String?
+  @objc public init(iccId: Swift.String?, carrier: Swift.String?)
+  required public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class SpecService : ObjectiveC.NSObject {
+  @objc public static func deviceRename(deviceId: Swift.String, newName: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func deviceUpdateTimezone(deviceId: Swift.String, time: Swift.String, zone: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?) -> Swift.Void)
+  @objc public static func deviceBatteryStatusList(deviceList: [Swift.String], completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: [Swift.String : RapidKit.BatteryStatus]?) -> Swift.Void)
+  @objc public static func deviceBatteryStatus(deviceId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.BatteryStatus?) -> Swift.Void)
+  @objc public static func deviceOnlineStatusList(deviceList: [Swift.String], completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: [Swift.String : RapidKit.OnlineStatus]?) -> Swift.Void)
+  @objc public static func deviceOnlineStatus(deviceId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.OnlineStatus?) -> Swift.Void)
+  @objc public static func deviceThumbnailList(deviceList: [Swift.String], completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: [Swift.String : RapidKit.Thumbnail]?) -> Swift.Void)
+  @objc public static func deviceThumbnail(deviceId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.Thumbnail?) -> Swift.Void)
+  @objc public static func deviceTimezoneList(deviceList: [Swift.String], completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: [Swift.String : RapidKit.Timezone]?) -> Swift.Void)
+  @objc public static func deviceTimezone(deviceId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.Timezone?) -> Swift.Void)
+  @objc public static func devicePrimary(deviceId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.Primary?) -> Swift.Void)
+  @objc public static func devicePrimaryByPage(offset: Swift.Int = 0, limit: Swift.Int = 10, nameFilter: Swift.String = "", completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.PrimaryByPage?) -> Swift.Void)
+  @objc public static func deviceIccIdList(deviceList: [Swift.String], completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: [Swift.String : RapidKit.DeviceIccId]?) -> Swift.Void)
+  @objc public static func deviceIccId(deviceId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.DeviceIccId?) -> Swift.Void)
+  @objc public static func simCardInfo(iccId: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.SimData?) -> Swift.Void)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @objcMembers public class CloudRecordIndexPacket : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var list: [RapidKit.CloudRecordIndex]
+  @objc public var total: Swift.Int
+  @objc public init(list: [RapidKit.CloudRecordIndex], total: Swift.Int)
+  required public init(from decoder: any Swift.Decoder) throws
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+@objc @objcMembers public class CloudRecordIndex : ObjectiveC.NSObject, Swift.Codable {
+  @objc public var startTimestampSecond: Swift.Int
+  @objc public var endTimestampSecond: Swift.Int
+  @objc public var durationSecond: Swift.Int
+  @objc public var storageId: Swift.String
+  @objc public var tag: Swift.String
+  @objc public var files: [Swift.String]
+  @objc public var isTimelapse: Swift.Bool {
+    @objc get
+  }
+  @objc public var startTimestampInMs: Swift.Int64 {
+    @objc get
+  }
+  @objc public var endTimestampInMs: Swift.Int64 {
+    @objc get
+  }
+  @objc public var durationInMs: Swift.Int64 {
+    @objc get
+  }
+  @objc public init(startTimestampSecond: Swift.Int, endTimestampSecond: Swift.Int, durationSecond: Swift.Int, storageId: Swift.String, tag: Swift.String, files: [Swift.String])
+  @objc convenience public init(startTimestampSecond: Swift.Int, endTimestampSecond: Swift.Int, durationSecond: Swift.Int, storageId: Swift.String)
+  required public init(from decoder: any Swift.Decoder) throws
+  public func encode(to encoder: any Swift.Encoder) throws
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class StorageService : ObjectiveC.NSObject {
+  @objc public static let errorNoRecord: Swift.Int32
+  @objc public static func listRecords(deviceId: Swift.String, date: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.CloudRecordIndexPacket?) -> Swift.Void)
+  @objc override dynamic public init()
+  @objc deinit
+}
+public typealias CloudReplayChunkNotFoundListener = (Swift.Int) -> Swift.Void
+public typealias CloudReplayCompleteListener = () -> Swift.Void
+public typealias CloudReplayRetrieveErrorListener = (Swift.Int) -> Swift.Void
+@objc public enum CloudReplayDownloadStartResultType : Swift.Int {
+  case success
+  case networkError
+  case noPermitted
+  case invalidParameter
+  case invalidResponse
+  case fileTooLong
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers final public class CloudReplayDownloadStartResult : ObjectiveC.NSObject {
+  @objc final public let type: RapidKit.CloudReplayDownloadStartResultType
+  @objc final public let errorCode: Swift.Int
+  @objc final public let requestedDurationSeconds: Swift.Int
+  @objc final public let permittedDurationSeconds: Swift.Int
+  @objc final public var success: Swift.Bool {
+    @objc get
+  }
+  @objc final public var effectiveDurationSeconds: Swift.Int {
+    @objc get
+  }
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class CloudReplayStream : ObjectiveC.NSObject, RapidKit.StreamInterface {
+  @objc public static func create(deviceId: Swift.String) -> RapidKit.CloudReplayStream
+  @objc public func setOnChunkNotFound(_ listener: @escaping RapidKit.CloudReplayChunkNotFoundListener)
+  @objc public func setOnComplete(_ listener: @escaping RapidKit.CloudReplayCompleteListener)
+  @objc public func setOnRetrieveError(_ listener: @escaping RapidKit.CloudReplayRetrieveErrorListener)
+  @objc public func prepare(startTimestampInSecond: Swift.Int, endTimestampInSecond: Swift.Int, storageId: Swift.String, fileNameList: [Swift.String]? = nil)
+  @objc public func start()
+  @objc public func startDownload(startTimestampInSecond: Swift.Int, endTimestampInSecond: Swift.Int, storageId: Swift.String, fileNameList: [Swift.String]? = nil, completion: @escaping (RapidKit.CloudReplayDownloadStartResult) -> Swift.Void)
+  @objc public func seek(timestampInSecond: Swift.Int)
+  @objc public func pause()
+  @objc public func resume()
+  @objc public func stop()
+  @objc public func destroy()
+  @objc public func provider(index: Swift.UInt32 = 0) -> RapidKit.StreamProvider
+  @objc public func setSpeed(_ speed: Swift.Int)
+  @objc public var isStarted: Swift.Bool {
+    @objc get
+  }
+  @objc public var isPaused: Swift.Bool {
+    @objc get
+  }
+  @objc public func listRecords(date: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.CloudRecordIndexPacket?) -> Swift.Void)
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class LiveStream : ObjectiveC.NSObject, RapidKit.StreamInterface {
+  @objc public static func createPrimary(pipe: RapidKit.Pipe, audioEnable: Swift.Bool = true) -> RapidKit.LiveStream
+  @objc public static func createSecondary(pipe: RapidKit.Pipe, audioEnable: Swift.Bool = false) -> RapidKit.LiveStream
+  @objc public func destroy()
+  @objc public func start()
+  @objc public func stop()
+  @objc public var isStarted: Swift.Bool {
+    @objc get
+  }
+  @objc public func switchQuality(_ quality: Swift.Int)
+  @objc public func currentQuality() -> Swift.Int
+  @objc public func requestKeyFrame()
+  @objc public func highQuality()
+  @objc public func lowQuality()
+  @objc public func provider(index: Swift.UInt32 = 0) -> RapidKit.StreamProvider
+  @objc public func quality(completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: [RapidKit.Quality]?) -> Swift.Void)
+  @objc public func pause()
+  @objc public func resume()
+  @objc public var isPaused: Swift.Bool {
+    @objc get
+  }
+  @objc public func setExternalDataListener(_ listener: RapidKit.ExternalDataListener?)
+  @objc deinit
+}
+@objc public enum LocalReplayStartMode : Swift.Int {
+  case continuous = 0
+  case singleRecord = 1
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class LocalReplayStream : ObjectiveC.NSObject, RapidKit.StreamInterface {
+  @objc @available(*, deprecated, message: "Device time zone is required. Use create(pipe:audioEnable:timeZone:).")
+  public static func create(pipe: RapidKit.Pipe, audioEnable: Swift.Bool = true) -> RapidKit.LocalReplayStream
+  @objc public static func create(pipe: RapidKit.Pipe, audioEnable: Swift.Bool = true, timeZone: Foundation.TimeZone) -> RapidKit.LocalReplayStream
+  @objc public func setDeviceTimeZone(_ timeZone: Foundation.TimeZone)
+  @objc public func prepare(startTimestampInSecond: Swift.Int, endTimestampInSecond: Swift.Int)
+  @objc public func start()
+  @objc public func compatibleOnResumeInstruct()
+  @objc public func seek(timestampInSecond: Swift.Int)
+  @objc public func seek(timestampInSecond: Swift.Int, startMode: RapidKit.LocalReplayStartMode)
+  @objc public func stop()
+  @objc public func pause()
+  @objc public func resume()
+  @objc public var isPaused: Swift.Bool {
+    @objc get
+  }
+  @objc public var isStarted: Swift.Bool {
+    @objc get
+  }
+  @objc public func destroy()
+  @objc public func setSpeed(_ speed: Swift.Int)
+  @objc public func provider(index: Swift.UInt32 = 0) -> RapidKit.StreamProvider
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class RelayStream : ObjectiveC.NSObject {
+  @objc public static func create(deviceId: Swift.String) -> RapidKit.RelayStream
+  @objc public func destroy()
+  @objc deinit
+  @objc public func enqueue(packet: RapidKit.StreamPacket)
+  @objc public func provider(index: Swift.UInt32 = 0) -> RapidKit.StreamProvider
+}
+@objc public protocol StreamInterface {
+  @objc func provider(index: Swift.UInt32) -> RapidKit.StreamProvider
+  @objc func start()
+  @objc func stop()
+  @objc func pause()
+  @objc func resume()
+  @objc func destroy()
+  @objc var isStarted: Swift.Bool { get }
+  @objc var isPaused: Swift.Bool { get }
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers public class StreamPacket : ObjectiveC.NSObject {
+  @objc public static let codecUnknown: Swift.Int32
+  @objc public static let codecAvc: Swift.Int32
+  @objc public static let codecHevc: Swift.Int32
+  @objc public static let codecMjpeg: Swift.Int32
+  @objc public static let codecG711a: Swift.Int32
+  @objc public static let frameFlagKey: Swift.Int32
+  @objc public static let frameFlagTimelapse: Swift.Int32
+  @objc public static func create() -> RapidKit.StreamPacket
+  @objc public static func createByData(buffer: Foundation.Data) -> RapidKit.StreamPacket
+  @objc public func fill(buffer: Foundation.Data)
+  @objc @available(*, deprecated, message: "Borrowed pointer only. Do not retain, free, or transfer it. Misuse may cause use-after-free, double-free, or memory leaks. Use RelayStream.enqueue(packet:) instead.")
+  public func getNativePacket() -> Swift.UnsafeMutablePointer<RapidKit.RAPID_Core_StreamPacket>?
+  @objc deinit
+  @objc public var codecId: Swift.Int32 {
+    @objc get
+    @objc set
+  }
+  @objc public var subType: Swift.Int32 {
+    @objc get
+    @objc set
+  }
+  @objc public var frameType: Swift.Int32 {
+    @objc get
+    @objc set
+  }
+  @objc public var isKeyFrame: Swift.Bool {
+    @objc get
+  }
+  @objc public var isTimelapseFrame: Swift.Bool {
+    @objc get
+  }
+  @objc public var bufferSize: Swift.Int32 {
+    @objc get
+  }
+  @objc public var sequenceNumber: Swift.Int32 {
+    @objc get
+    @objc set
+  }
+  @objc public var timestamp: Swift.Int64 {
+    @objc get
+    @objc set
+  }
+  @objc public var utcTimestamp: Swift.Int64 {
+    @objc get
+    @objc set
+  }
+  @objc public var finalPacket: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc public var speedPacket: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc public var speed: Swift.Int8 {
+    @objc get
+    @objc set
+  }
+}
+@_hasMissingDesignatedInitializers @objcMembers @objc public class StreamProvider : ObjectiveC.NSObject {
+  @objc public var nativeProvider: RapidKit.RAPID_Core_StreamProvider? {
+    get
+  }
+  @objc public static func fromNative(_ nativeProvider: RapidKit.RAPID_Core_StreamProvider?) -> RapidKit.StreamProvider
+  @objc deinit
+}
+public typealias ExternalDataListener = (_ data1: Swift.UInt32, _ data2: Swift.UInt32, _ buffer: Foundation.Data?) -> Swift.Void
+@objc @_hasMissingDesignatedInitializers @objcMembers public class Instruct : ObjectiveC.NSObject {
+  @objc public static func create(pipe: RapidKit.Pipe) -> RapidKit.Instruct
+  @objc public func destroy()
+  @objc public func requestStandard(name: Swift.String, params: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: Swift.String?) -> Swift.Void)
+  @objc @available(*, deprecated, message: "Use InstructStandard.quality instead")
+  public func quality(completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: [RapidKit.Quality]?) -> Swift.Void)
+  @objc @available(*, deprecated, message: "Use InstructStandard.listRecords(date:timeZone:completion:) instead")
+  public func listRecords(date: Swift.String, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.RecordIndexPacket?) -> Swift.Void)
+  @objc @available(*, deprecated, message: "Use InstructStandard.storageState instead")
+  public func storageState(completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: RapidKit.StorageState?) -> Swift.Void)
+  @objc public func setExternalDataListener(_ listener: RapidKit.ExternalDataListener?)
+  @objc deinit
+}
+@objc @objcMembers public class Quality : ObjectiveC.NSObject {
+  @objc final public let label: Swift.String
+  @objc final public let value: Swift.Int
+  @objc public init(label: Swift.String, value: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class StorageState : ObjectiveC.NSObject {
+  @objc final public let total: Swift.Int
+  @objc final public let free: Swift.Int
+  @objc public init(total: Swift.Int, free: Swift.Int)
+  @objc deinit
+}
+@objc public enum Direction : Swift.Int {
+  case up = 0
+  case down = 1
+  case left = 2
+  case right = 3
+  case leftUp = 4
+  case leftDown = 5
+  case rightUp = 6
+  case rightDown = 7
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @objcMembers public class RemoteIpConfig : ObjectiveC.NSObject {
+  @objc final public let intf: Swift.String
+  @objc final public let enableDhcp: Swift.Int
+  @objc final public let ip: Swift.String
+  @objc final public let netmask: Swift.String
+  @objc final public let gateway: Swift.String
+  @objc final public let dns1: Swift.String
+  @objc final public let dns2: Swift.String
+  @objc final public let mac: Swift.String
+  @objc public init(intf: Swift.String, enableDhcp: Swift.Int, ip: Swift.String, netmask: Swift.String, gateway: Swift.String, dns1: Swift.String, dns2: Swift.String, mac: Swift.String)
+  @objc deinit
+}
+@objc @objcMembers public class ActiveNetworkState : ObjectiveC.NSObject {
+  @objc final public let type: Swift.Int
+  @objc final public let signal: Swift.Int
+  @objc public init(type: Swift.Int, signal: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class BatteryState : ObjectiveC.NSObject {
+  @objc final public let mode: Swift.Int
+  @objc final public let power: Swift.Int
+  @objc final public let low: Swift.Int
+  @objc public init(mode: Swift.Int, power: Swift.Int, low: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class AiState : ObjectiveC.NSObject {
+  @objc final public let mask: Swift.Int
+  @objc final public let flags: Swift.Int
+  @objc public init(mask: Swift.Int, flags: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class VolumeState : ObjectiveC.NSObject {
+  @objc final public let volume: Swift.Int
+  @objc final public let rangeKnown: Swift.Int
+  @objc public init(volume: Swift.Int, rangeKnown: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class MotionTrackingState : ObjectiveC.NSObject {
+  @objc final public let mode: Swift.Int
+  @objc final public let support: Swift.Int
+  @objc public init(mode: Swift.Int, support: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class RecordingProfile : ObjectiveC.NSObject {
+  @objc final public let recordType: Swift.Int
+  @objc final public let recordQuality: Swift.Int
+  @objc public init(recordType: Swift.Int, recordQuality: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class NightVision : ObjectiveC.NSObject {
+  @objc final public let mode: Swift.Int
+  @objc final public let support: Swift.Int
+  @objc public init(mode: Swift.Int, support: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class MotionDetectState : ObjectiveC.NSObject {
+  @objc final public let enabled: Swift.Int
+  @objc final public let sensitivity: Swift.Int
+  @objc public init(enabled: Swift.Int, sensitivity: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class MotionDetectRect : ObjectiveC.NSObject {
+  @objc final public let left: Swift.Int
+  @objc final public let top: Swift.Int
+  @objc final public let width: Swift.Int
+  @objc final public let height: Swift.Int
+  @objc public init(left: Swift.Int, top: Swift.Int, width: Swift.Int, height: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class MotionDetectPoint : ObjectiveC.NSObject {
+  @objc final public let x: Swift.Int
+  @objc final public let y: Swift.Int
+  @objc public init(x: Swift.Int, y: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class MotionDetectPolygon : ObjectiveC.NSObject {
+  @objc final public let points: [RapidKit.MotionDetectPoint]
+  @objc public init(points: [RapidKit.MotionDetectPoint])
+  @objc deinit
+}
+@objc @objcMembers public class MotionDetectArea : ObjectiveC.NSObject {
+  @objc final public let channel: Swift.Int
+  @objc final public let enabled: Swift.Bool
+  @objc final public let sensitivity: Swift.Int
+  @objc final public let areaType: Swift.Int
+  @objc final public let hasZone: Swift.Bool
+  @objc final public let excludeZone: Swift.Bool
+  @objc final public let supportsExcludeZone: Swift.Bool
+  @objc final public let rects: [RapidKit.MotionDetectRect]
+  @objc final public let polygons: [RapidKit.MotionDetectPolygon]
+  @objc public init(channel: Swift.Int = 0, enabled: Swift.Bool, sensitivity: Swift.Int, areaType: Swift.Int, hasZone: Swift.Bool, excludeZone: Swift.Bool, supportsExcludeZone: Swift.Bool = false, rects: [RapidKit.MotionDetectRect] = [], polygons: [RapidKit.MotionDetectPolygon] = [])
+  @objc deinit
+}
+@objc @objcMembers public class OsdItem : ObjectiveC.NSObject {
+  @objc final public let id: Swift.Int
+  @objc final public let flags: Swift.Int
+  @objc final public let type: Swift.Int
+  @objc final public let position: Swift.Int
+  @objc final public let x: Swift.Int
+  @objc final public let y: Swift.Int
+  @objc final public let alignment: Swift.Int
+  @objc final public let data: Swift.String?
+  @objc final public let text: Swift.String?
+  @objc public init(id: Swift.Int, flags: Swift.Int, type: Swift.Int, position: Swift.Int = 0, x: Swift.Int = 0, y: Swift.Int = 0, alignment: Swift.Int = 0, data: Swift.String? = nil, text: Swift.String? = nil)
+  @objc deinit
+}
+@objc @objcMembers public class OsdConfig : ObjectiveC.NSObject {
+  @objc final public let channel: Swift.Int
+  @objc final public let supportedTypes: Swift.Int
+  @objc final public let encoding: Swift.Int
+  @objc final public let maxTextLength: Swift.Int
+  @objc final public let maxItems: Swift.Int
+  @objc final public let items: [RapidKit.OsdItem]
+  @objc public init(channel: Swift.Int = 0, supportedTypes: Swift.Int = 0, encoding: Swift.Int = 0, maxTextLength: Swift.Int = 32, maxItems: Swift.Int = 0, items: [RapidKit.OsdItem] = [])
+  @objc deinit
+}
+@objc @objcMembers public class CruiseAbility : ObjectiveC.NSObject {
+  @objc final public let channel: Swift.Int
+  @objc final public let maxTracks: Swift.Int
+  @objc final public let type: Swift.Int
+  @objc public init(channel: Swift.Int, maxTracks: Swift.Int, type: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class CruiseTrack : ObjectiveC.NSObject {
+  @objc final public let trackNo: Swift.Int
+  @objc final public let presetPoints: [Swift.Int]
+  @objc final public let name: Swift.String
+  @objc final public let action: Swift.Int
+  @objc public init(trackNo: Swift.Int, presetPoints: [Swift.Int], name: Swift.String = "", action: Swift.Int = 0)
+  @objc deinit
+}
+@objc @objcMembers public class CruiseTracks : ObjectiveC.NSObject {
+  @objc final public let channel: Swift.Int
+  @objc final public let type: Swift.Int
+  @objc final public let stayTime: Swift.Int
+  @objc final public let activeTrack: Swift.Int
+  @objc final public let tracks: [RapidKit.CruiseTrack]
+  @objc public init(channel: Swift.Int, type: Swift.Int, stayTime: Swift.Int, activeTrack: Swift.Int, tracks: [RapidKit.CruiseTrack])
+  @objc deinit
+}
+@objc @objcMembers public class TimedCruiseItem : ObjectiveC.NSObject {
+  @objc final public let timerTrackNo: Swift.Int
+  @objc final public let repeatWeek: Swift.Int
+  @objc final public let startHour: Swift.Int
+  @objc final public let startMinute: Swift.Int
+  @objc final public let startSecond: Swift.Int
+  @objc final public let endHour: Swift.Int
+  @objc final public let endMinute: Swift.Int
+  @objc final public let endSecond: Swift.Int
+  @objc final public let trackNo: Swift.Int
+  @objc final public let trackInterval: Swift.Int
+  @objc public init(timerTrackNo: Swift.Int, repeatWeek: Swift.Int, startHour: Swift.Int, startMinute: Swift.Int, startSecond: Swift.Int, endHour: Swift.Int, endMinute: Swift.Int, endSecond: Swift.Int, trackNo: Swift.Int, trackInterval: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class TimedCruise : ObjectiveC.NSObject {
+  @objc final public let channel: Swift.Int
+  @objc final public let action: Swift.Int
+  @objc final public let items: [RapidKit.TimedCruiseItem]
+  @objc public init(channel: Swift.Int = 0, action: Swift.Int, items: [RapidKit.TimedCruiseItem])
+  @objc deinit
+}
+@objc @objcMembers public class WatchPoint : ObjectiveC.NSObject {
+  @objc final public let channel: Swift.Int
+  @objc final public let presetPointNo: Swift.Int
+  @objc final public let idleTime: Swift.Int
+  @objc public init(channel: Swift.Int = 0, presetPointNo: Swift.Int, idleTime: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class Light : ObjectiveC.NSObject {
+  @objc final public let mode: Swift.Int
+  @objc final public let support: Swift.Int
+  @objc public init(mode: Swift.Int, support: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class RecordDate : ObjectiveC.NSObject {
+  @objc final public let year: Swift.Int
+  @objc final public let month: Swift.Int
+  @objc final public let day: Swift.Int
+  @objc public init(year: Swift.Int, month: Swift.Int, day: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class RecordDatesPacket : ObjectiveC.NSObject {
+  @objc final public let list: [RapidKit.RecordDate]?
+  @objc final public let total: Swift.Int
+  @objc public init(total: Swift.Int, list: [RapidKit.RecordDate]?)
+  @objc deinit
+}
+@objc @objcMembers public class RecordIndex : ObjectiveC.NSObject {
+  @objc final public let startTimestampSecond: Swift.Int
+  @objc final public let endTimestampSecond: Swift.Int
+  @objc final public let durationSecond: Swift.Int
+  @objc final public let eventType: Swift.Int
+  @objc final public let eventTimestampSecond: Swift.Int
+  @objc public init(startTimestampSecond: Swift.Int, endTimestampSecond: Swift.Int, durationSecond: Swift.Int, eventType: Swift.Int, eventTimestampSecond: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class RecordIndexPacket : ObjectiveC.NSObject {
+  @objc final public let list: [RapidKit.RecordIndex]
+  @objc final public let total: Swift.Int
+  @objc public init(total: Swift.Int, list: [RapidKit.RecordIndex])
+  @objc deinit
+}
+@objc @objcMembers public class Picture : ObjectiveC.NSObject {
+  @objc final public let mode: Swift.Int
+  @objc public init(mode: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class CurrentWifi : ObjectiveC.NSObject {
+  @objc final public let ssid: Swift.String
+  @objc final public let signal: Swift.Int
+  @objc public init(ssid: Swift.String, signal: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class FeedingSpec : ObjectiveC.NSObject {
+  @objc final public let maxServingCount: Swift.Int
+  @objc final public let maxTimerCount: Swift.Int
+  @objc public init(maxServingCount: Swift.Int, maxTimerCount: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class NearbyWifi : ObjectiveC.NSObject {
+  @objc final public let ssid: Swift.String
+  @objc final public let signal: Swift.Int
+  @objc final public let mode: Swift.Int
+  @objc final public let enctype: Swift.Int
+  @objc final public let status: Swift.Int
+  @objc public init(ssid: Swift.String, signal: Swift.Int, mode: Swift.Int, enctype: Swift.Int, status: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class NearbyWifiPacket : ObjectiveC.NSObject {
+  @objc final public let list: [RapidKit.NearbyWifi]?
+  @objc final public let total: Swift.Int
+  @objc public init(total: Swift.Int, list: [RapidKit.NearbyWifi]?)
+  @objc deinit
+}
+@objc @objcMembers public class TimePlan : ObjectiveC.NSObject {
+  @objc final public let startHour: Swift.Int
+  @objc final public let startMinute: Swift.Int
+  @objc final public let startSecond: Swift.Int
+  @objc final public let endHour: Swift.Int
+  @objc final public let endMinute: Swift.Int
+  @objc final public let endSecond: Swift.Int
+  @objc final public let repeatDays: [Swift.Int]
+  @objc final public let enabled: Swift.Int
+  @objc public init(startHour: Swift.Int, startMinute: Swift.Int, startSecond: Swift.Int, endHour: Swift.Int, endMinute: Swift.Int, endSecond: Swift.Int, repeatDays: [Swift.Int], enabled: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class TimePlans : ObjectiveC.NSObject {
+  @objc final public let list: [RapidKit.TimePlan]?
+  @objc final public let total: Swift.Int
+  @objc public init(total: Swift.Int, list: [RapidKit.TimePlan]?)
+  @objc deinit
+}
+@objc @objcMembers public class PowerStrategy : ObjectiveC.NSObject {
+  @objc final public let strategy: Swift.Int
+  @objc final public let recLen: Swift.Int
+  @objc final public let planCount: Swift.Int
+  @objc final public let planList: [RapidKit.TimePlan]?
+  @objc public init(strategy: Swift.Int, recLen: Swift.Int, planCount: Swift.Int, planList: [RapidKit.TimePlan]?)
+  @objc deinit
+}
+@objc @objcMembers public class FeedingTimer : ObjectiveC.NSObject {
+  @objc final public let hour: Swift.Int
+  @objc final public let minute: Swift.Int
+  @objc final public let second: Swift.Int
+  @objc final public let repeatDays: [Swift.Int]
+  @objc final public let servingCount: Swift.Int
+  @objc final public let enabled: Swift.Int
+  @objc public init(hour: Swift.Int, minute: Swift.Int, second: Swift.Int, repeatDays: [Swift.Int], servingCount: Swift.Int, enabled: Swift.Int)
+  @objc deinit
+}
+@objc @objcMembers public class FeedingSchedule : ObjectiveC.NSObject {
+  @objc final public let list: [RapidKit.FeedingTimer]?
+  @objc final public let total: Swift.Int
+  @objc public init(total: Swift.Int, list: [RapidKit.FeedingTimer]?)
+  @objc deinit
+}
+@objc @objcMembers public class RingtonePacket : ObjectiveC.NSObject {
+  @objc final public let id: Swift.Int
+  @objc final public let type: Swift.Int
+  @objc final public let format: Swift.Int
+  @objc final public let codec: Swift.Int
+  @objc final public let content: Swift.String
+  @objc public init(id: Swift.Int, type: Swift.Int, format: Swift.Int, codec: Swift.Int, content: Swift.String)
+  @objc deinit
+}
+@objc @objcMembers public class RingtoneSpec : ObjectiveC.NSObject {
+  @objc final public let sampleRate: Swift.Int
+  @objc final public let bitDepth: Swift.Int
+  @objc final public let channels: Swift.Int
+  @objc final public let id: Swift.Int
+  @objc final public let limit: Swift.Int
+  @objc final public let format: [Swift.Int]
+  @objc final public let codec: [Swift.Int]
+  @objc public init(sampleRate: Swift.Int, bitDepth: Swift.Int, channels: Swift.Int, id: Swift.Int, limit: Swift.Int, format: [Swift.Int], codec: [Swift.Int])
+  @objc deinit
+}
+@objc @objcMembers public class Ability : ObjectiveC.NSObject {
+  @objc final public let features: [Swift.String : Any]?
+  @objc final public let settings: [Swift.String : Any]?
+  @objc public init(features: [Swift.String : Any]?, settings: [Swift.String : Any]?)
+  @objc deinit
+}
+@objc @objcMembers public class PtzPosition : ObjectiveC.NSObject {
+  @objc final public let x: Swift.Double
+  @objc final public let y: Swift.Double
+  @objc final public let z: Swift.Double
+  @objc final public let presetIndex: Swift.Int
+  @objc public init(x: Swift.Double, y: Swift.Double, z: Swift.Double)
+  @objc public init(x: Swift.Double, y: Swift.Double, z: Swift.Double, presetIndex: Swift.Int)
+  @objc deinit
+}
+@objc public enum PresetType : Swift.Int {
+  case byIndex = 1
+  case byPosition = 2
+  case byIndexNoName = 3
+  case byPositionNoName = 4
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @objcMembers public class Coordinate : ObjectiveC.NSObject {
+  @objc final public let x: Swift.Double
+  @objc final public let y: Swift.Double
+  @objc final public let z: Swift.Double
+  @objc public init(x: Swift.Double, y: Swift.Double, z: Swift.Double)
+  @objc deinit
+}
+@objc @objcMembers public class PresetAbility : ObjectiveC.NSObject {
+  @objc final public let max: Swift.Int
+  @objc final public let type: RapidKit.PresetType
+  @objc public init(max: Swift.Int, type: RapidKit.PresetType)
+  @objc deinit
+}
+@objc @objcMembers public class PresetPoint : ObjectiveC.NSObject {
+  @objc final public let type: RapidKit.PresetType
+  @objc final public let index: Swift.Int
+  @objc final public let flags: Swift.Int
+  @objc final public let name: Swift.String?
+  @objc final public let coordinate: RapidKit.Coordinate?
+  @objc public init(type: RapidKit.PresetType, index: Swift.Int, flags: Swift.Int = 0, name: Swift.String? = nil, coordinate: RapidKit.Coordinate? = nil)
+  @objc deinit
+}
+@objc @objcMembers public class PresetPointResp : ObjectiveC.NSObject {
+  @objc final public let type: RapidKit.PresetType
+  @objc final public let array: [RapidKit.PresetPoint]?
+  @objc public init(type: RapidKit.PresetType, array: [RapidKit.PresetPoint]?)
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class InstructStandard : ObjectiveC.NSObject {
+  @objc public static func create(pipe: RapidKit.Pipe) -> RapidKit.InstructStandard
+  @objc public func destroy()
+  @objc public func keepAwake(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func leaveAwake(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  public func startCallRaw(flavor: Swift.Int, timeoutSecond: Swift.Int = 30, name: Swift.String = "", completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, Swift.Int?) -> Swift.Void)
+  @objc public func cancelCall(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func answerCall(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func rejectCall(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func hangupCall(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func ptzReset(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func ptzStopMoving(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func ptzMoveByStep(direction: RapidKit.Direction, channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func ptzMoveByContinuous(direction: RapidKit.Direction, channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func sendPtzLongCmd(control: Swift.Int, speed: Swift.Int = 0, point: Swift.Int = 0, limit: Swift.Int = 0, aux: Swift.Int = 0, channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func zoomInContinuous(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func zoomOutContinuous(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func zoomStop(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  public func zoomRatio(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, Swift.Double?) -> Swift.Void)
+  @objc public func setZoomRatio(ratio: Swift.Double, channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func quality(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, [RapidKit.Quality]?) -> Swift.Void)
+  @objc public func reboot(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func setAlarmRingtone(packet: RapidKit.RingtonePacket, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func ringtoneSpec(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.RingtoneSpec?) -> Swift.Void)
+  @objc public func ability(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.Ability?) -> Swift.Void)
+  @objc @available(*, deprecated, message: "Device time zone is required. Use listRecords(date:timeZone:completion:).")
+  public func listRecords(date: Swift.String, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.RecordIndexPacket?) -> Swift.Void)
+  @objc public func listRecords(date: Swift.String, timeZone: Foundation.TimeZone, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.RecordIndexPacket?) -> Swift.Void)
+  @objc public func setAlarmState(state: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  public func pirSensitivity(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, Swift.Int?) -> Swift.Void)
+  @objc public func setPirSensitivity(sensitivity: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  public func ledState(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, Swift.Int?) -> Swift.Void)
+  @objc public func setLedState(state: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  public func primaryChannel(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, Swift.Int?) -> Swift.Void)
+  @objc public func setPrimaryChannel(channel: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  public func powerHz(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, Swift.Int?) -> Swift.Void)
+  @objc public func setPowerHz(mode: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  public func eventState(event: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, Swift.Int?) -> Swift.Void)
+  @objc public func setEventState(event: Swift.Int, enabled: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  public func alarmState(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, Swift.Int?) -> Swift.Void)
+  @objc public func playAlarmSound(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func feedPet(servingCount: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func feedingSpec(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.FeedingSpec?) -> Swift.Void)
+  @objc public func shutdownPlans(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.TimePlans?) -> Swift.Void)
+  @objc public func setShutdownPlans(plans: RapidKit.TimePlans, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func feedingSchedule(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.FeedingSchedule?) -> Swift.Void)
+  @objc public func listNearbyWifi(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.NearbyWifiPacket?) -> Swift.Void)
+  @objc public func recordDates(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.RecordDatesPacket?) -> Swift.Void)
+  @objc public func setFeedingSchedule(schedule: RapidKit.FeedingSchedule, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func picture(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.Picture?) -> Swift.Void)
+  @objc public func currentPtzPosition(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.PtzPosition?) -> Swift.Void)
+  @objc public func setPtzPosition(position: RapidKit.PtzPosition, channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func turnToPreset(presetIndex: Swift.Int, channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func presetSpec(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.PresetAbility?) -> Swift.Void)
+  @objc public func allPresetPoints(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.PresetPointResp?) -> Swift.Void)
+  @objc public func updatePresetPoint(_ point: RapidKit.PresetPoint, channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func deletePresetPoint(_ point: RapidKit.PresetPoint, channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func currentWifi(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.CurrentWifi?) -> Swift.Void)
+  @objc public func currentNetworkState(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.ActiveNetworkState?) -> Swift.Void)
+  @objc public func batteryState(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.BatteryState?) -> Swift.Void)
+  @objc public func remoteIpConfig(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.RemoteIpConfig?) -> Swift.Void)
+  @objc public func setRemoteIpConfig(config: RapidKit.RemoteIpConfig, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func setPicture(mode: Swift.Int, channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func light(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.Light?) -> Swift.Void)
+  @objc public func motionDetectState(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.MotionDetectState?) -> Swift.Void)
+  @objc public func setMotionDetectState(enabled: Swift.Int, sensitivity: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  public func maxAwakeTime(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, Swift.Int?) -> Swift.Void)
+  @objc public func setMaxAwakeTime(seconds: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  public func screenDisplayTime(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, Swift.Int?) -> Swift.Void)
+  @objc public func setScreenDisplayTime(seconds: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func osd(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.OsdConfig?) -> Swift.Void)
+  @objc public func setOsd(config: RapidKit.OsdConfig, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func motionDetectArea(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.MotionDetectArea?) -> Swift.Void)
+  @objc public func setMotionDetectArea(_ area: RapidKit.MotionDetectArea, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func motionDetectAreaVisible(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, Swift.Bool) -> Swift.Void)
+  @objc public func setMotionDetectAreaVisible(_ visible: Swift.Bool, channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func cruiseAbility(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.CruiseAbility?) -> Swift.Void)
+  @objc public func cruiseTracks(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.CruiseTracks?) -> Swift.Void)
+  @objc public func setCruiseTrack(_ track: RapidKit.CruiseTrack, type: Swift.Int, stayTime: Swift.Int, channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func deleteCruiseTrack(_ track: RapidKit.CruiseTrack, type: Swift.Int, channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func startCruiseAutoScan(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func selectCruiseTrack(_ trackNo: Swift.Int, channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func timedCruise(timerTrackNo: Swift.Int = 0, channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.TimedCruise?) -> Swift.Void)
+  @objc public func setTimedCruise(_ timedCruise: RapidKit.TimedCruise, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func createTimedCruise(_ items: [RapidKit.TimedCruiseItem], channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func updateTimedCruise(_ items: [RapidKit.TimedCruiseItem], channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func deleteTimedCruise(_ items: [RapidKit.TimedCruiseItem], channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func timedCruiseEnabled(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, Swift.Bool) -> Swift.Void)
+  @objc public func setTimedCruiseEnabled(_ enabled: Swift.Bool, channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func watchPoint(channel: Swift.Int = 0, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.WatchPoint?) -> Swift.Void)
+  @objc public func setWatchPoint(_ watchPoint: RapidKit.WatchPoint, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func setLight(mode: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func setNightVision(mode: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func nightVision(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.NightVision?) -> Swift.Void)
+  @objc public func currentAiState(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.AiState?) -> Swift.Void)
+  @objc public func setAiState(mask: Swift.Int, flags: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func storageFormat(timeout: Swift.Int = 60, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func setRecordingProfile(profile: RapidKit.RecordingProfile, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func recordingProfile(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.RecordingProfile?) -> Swift.Void)
+  @objc public func setDeviceSwitch(status: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  public func deviceSwitch(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, Swift.Int?) -> Swift.Void)
+  @objc public func updateRemoteWifi(ssid: Swift.String, password: Swift.String, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func setVolumeState(volumeState: RapidKit.VolumeState, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func volumeState(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.VolumeState?) -> Swift.Void)
+  @objc public func motionTrackingState(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.MotionTrackingState?) -> Swift.Void)
+  @objc public func setMotionTrackingState(mode: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  public func microphoneSwitch(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, Swift.Int?) -> Swift.Void)
+  @objc public func setMicrophoneSwitch(status: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  public func microphoneSensitivity(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, Swift.Int?) -> Swift.Void)
+  @objc public func setMicrophoneSensitivity(sensitivity: Swift.Int, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc public func storageState(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.StorageState?) -> Swift.Void)
+  @objc public func powerStrategy(completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?, RapidKit.PowerStrategy?) -> Swift.Void)
+  @objc public func setPowerStrategy(_ strategy: RapidKit.PowerStrategy, completion: @escaping (Swift.Bool, Swift.Int32, Swift.String?) -> Swift.Void)
+  @objc deinit
+}
+public typealias LanDiscoveryRefreshListener = ([Swift.String]) -> Swift.Void
+public typealias LanDiscoveryTimeoutListener = () -> Swift.Void
+final public class LanDiscovery {
+  final public var onRefresh: RapidKit.LanDiscoveryRefreshListener?
+  final public var onTimeout: RapidKit.LanDiscoveryTimeoutListener?
+  public init()
+  @objc deinit
+  final public func start()
+  final public func stop()
+  public static func parseDevices(_ value: Swift.String) -> [Swift.String]
+}
+@objc public enum PersistentChannelState : Swift.Int {
+  case disconnected = 0
+  case connecting = 1
+  case connected = 2
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class PersistentChannel : ObjectiveC.NSObject {
+  @objc public static let stateChangedNotification: Foundation.NSNotification.Name
+  @objc public static let messageReceivedNotification: Foundation.NSNotification.Name
+  @objc public static func connect()
+  @objc public static func disconnect()
+  @objc public static func currentState() -> RapidKit.PersistentChannelState
+  @objc public static var isConnected: Swift.Bool {
+    @objc get
+  }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public enum PipeState : Swift.Int {
+  case undefined = 0
+  case attempting = 1
+  case established = 2
+  case abolished = 3
+  case failed = 4
+  case shutdownByRemote = 5
+  case tokenNotAvailable = 6
+  case internetNotAvailable = 7
+  case authFailed = 8
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public typealias PipeStateListener = (RapidKit.PipeState) -> Swift.Void
+@objc @_hasMissingDesignatedInitializers @objcMembers public class Pipe : ObjectiveC.NSObject {
+  @objc public static func create(deviceId: Swift.String) -> RapidKit.Pipe
+  @objc public static func createIndependent(deviceId: Swift.String) -> RapidKit.Pipe
+  @objc public func destroy()
+  @objc public func establish()
+  @objc public func abolish()
+  @objc public func currentState() -> RapidKit.PipeState
+  @objc public var isEstablished: Swift.Bool {
+    @objc get
+  }
+  @objc public func enableLanMode()
+  @objc public func setTransportMode(_ mode: Swift.Int32)
+  @objc public func listen(callback: @escaping RapidKit.PipeStateListener)
+  @objc public func instruct(id: Swift.UInt32, data: Foundation.Data?, timeoutSeconds: Swift.UInt32 = 5, completion: @escaping (_ success: Swift.Bool, _ code: Swift.Int32, _ message: Swift.String?, _ data: Foundation.Data?) -> Swift.Void)
+  @objc public static func prepareToken(deviceId: Swift.String)
+  @objc public func getNativePipe() -> RapidKit.RAPID_Core_PipeProxy?
+  @objc deinit
+}
+extension RapidKit.CallEndReason : Swift.Equatable {}
+extension RapidKit.CallEndReason : Swift.Hashable {}
+extension RapidKit.CallEndReason : Swift.RawRepresentable {}
+extension RapidKit.IncomingCallState : Swift.Equatable {}
+extension RapidKit.IncomingCallState : Swift.Hashable {}
+extension RapidKit.IncomingCallState : Swift.RawRepresentable {}
+extension RapidKit.OutgoingCallState : Swift.Equatable {}
+extension RapidKit.OutgoingCallState : Swift.Hashable {}
+extension RapidKit.OutgoingCallState : Swift.RawRepresentable {}
+extension RapidKit.ConnectedCallState : Swift.Equatable {}
+extension RapidKit.ConnectedCallState : Swift.Hashable {}
+extension RapidKit.ConnectedCallState : Swift.RawRepresentable {}
+extension RapidKit.ObservationLevel : Swift.Equatable {}
+extension RapidKit.ObservationLevel : Swift.Hashable {}
+extension RapidKit.ObservationLevel : Swift.RawRepresentable {}
+extension RapidKit.CloudReplayCaptureState : Swift.Equatable {}
+extension RapidKit.CloudReplayCaptureState : Swift.Hashable {}
+extension RapidKit.CloudReplayCaptureState : Swift.RawRepresentable {}
+extension RapidKit.ReplaySpeed : Swift.Equatable {}
+extension RapidKit.ReplaySpeed : Swift.Hashable {}
+extension RapidKit.ReplaySpeed : Swift.RawRepresentable {}
+extension RapidKit.LocalReplayCaptureState : Swift.Equatable {}
+extension RapidKit.LocalReplayCaptureState : Swift.Hashable {}
+extension RapidKit.LocalReplayCaptureState : Swift.RawRepresentable {}
+extension RapidKit.MediaChat.AudioSampleRate : Swift.Equatable {}
+extension RapidKit.MediaChat.AudioSampleRate : Swift.Hashable {}
+extension RapidKit.MediaChat.AudioSampleRate : Swift.RawRepresentable {}
+extension RapidKit.RenderState : Swift.Equatable {}
+extension RapidKit.RenderState : Swift.Hashable {}
+extension RapidKit.RenderState : Swift.RawRepresentable {}
+extension RapidKit.VideoDecoderPreference : Swift.Equatable {}
+extension RapidKit.VideoDecoderPreference : Swift.Hashable {}
+extension RapidKit.VideoDecoderPreference : Swift.RawRepresentable {}
+extension RapidKit.BindingMode : Swift.Equatable {}
+extension RapidKit.BindingMode : Swift.Hashable {}
+extension RapidKit.BindingMode : Swift.RawRepresentable {}
+extension RapidKit.HttpMethod : Swift.Equatable {}
+extension RapidKit.HttpMethod : Swift.Hashable {}
+extension RapidKit.HttpMethod : Swift.RawRepresentable {}
+extension RapidKit.CloudReplayDownloadStartResultType : Swift.Equatable {}
+extension RapidKit.CloudReplayDownloadStartResultType : Swift.Hashable {}
+extension RapidKit.CloudReplayDownloadStartResultType : Swift.RawRepresentable {}
+extension RapidKit.LocalReplayStartMode : Swift.Equatable {}
+extension RapidKit.LocalReplayStartMode : Swift.Hashable {}
+extension RapidKit.LocalReplayStartMode : Swift.RawRepresentable {}
+extension RapidKit.Direction : Swift.Equatable {}
+extension RapidKit.Direction : Swift.Hashable {}
+extension RapidKit.Direction : Swift.RawRepresentable {}
+extension RapidKit.PresetType : Swift.Equatable {}
+extension RapidKit.PresetType : Swift.Hashable {}
+extension RapidKit.PresetType : Swift.RawRepresentable {}
+extension RapidKit.PersistentChannelState : Swift.Equatable {}
+extension RapidKit.PersistentChannelState : Swift.Hashable {}
+extension RapidKit.PersistentChannelState : Swift.RawRepresentable {}
+extension RapidKit.PipeState : Swift.Equatable {}
+extension RapidKit.PipeState : Swift.Hashable {}
+extension RapidKit.PipeState : Swift.RawRepresentable {}

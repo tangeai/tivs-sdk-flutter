@@ -1,0 +1,13 @@
+{
+  "name": "rapid_kit",
+  "version": "1.8.0-alpha.1",
+  "description": "Please describe the basic information.",
+  "main": "index.ets",
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@ohos/flutter_ohos": "file:./har/flutter.har",    
+    "@yidun/captcha": "1.0.7",
+    "rapid_kit_foundation": "file:./har/rapid_kit_foundation.har",
+  }
+}

@@ -1,0 +1,11 @@
+analyzer:
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+  errors:
+    unused_field: ignore
+    unused_import: ignore
+    unused_element: ignore
+    deprecated_member_use_from_same_package: ignore
+    invalid_language_version_override: error
+include: package:flutter_lints/flutter.yaml

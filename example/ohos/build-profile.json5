@@ -1,0 +1,30 @@
+{
+  "app": {
+    "products": [
+      {
+        "buildOption": {
+          "strictMode": {
+            "useNormalizedOHMUrl": true
+          }
+        },
+        "compatibleSdkVersion": "5.0.0(12)",
+        "name": "default",
+        "runtimeOS": "HarmonyOS"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "applyToProducts": [
+            "default"
+          ],
+          "name": "default"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)
+// swift-module-flags: -target arm64-apple-ios13.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -enable-bare-slash-regex -module-name Captcha
+import Foundation
+import Swift
+import UIKit
+import VerifyCode
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@objc @_inheritsConvenienceInitializers public class CaptchaManager : ObjectiveC.NSObject, VerifyCode.NTESVerifyCodeManagerDelegate {
+  public static func acquire(completion: @escaping (Swift.Bool, Swift.String?, Swift.String?) -> Swift.Void)
+  @objc public func verifyCodeValidateFinish(_ result: Swift.Bool, validate: Swift.String?, message: Swift.String?)
+  @objc public func verifyCodeInitFailed(_ error: [Any]?)
+  @objc public func verifyCodeCloseWindow(_ close: VerifyCode.NTESVerifyCodeClose)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class Captcha {
+  public static func acquire(completion: @escaping (Swift.Bool, Swift.String?, Swift.String?) -> Swift.Void)
+  @objc deinit
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="216"
+    android:viewportHeight="216"> <!-- 增大视口以提高精度 -->
+    
+    <!-- Outer white circle -->
+    <path
+        android:fillColor="#FFF8E8"
+        android:pathData="M108,36c-39.76,0 -72,32.24 -72,72s32.24,72 72,72 72,-32.24 72,-72 -32.24,-72 -72,-72z"/>
+    
+    <!-- Main lens circle with theme color -->
+    <path
+        android:fillColor="#659287"
+        android:pathData="M108,54c-29.82,0 -54,24.18 -54,54s24.18,54 54,54 54,-24.18 54,-54 -24.18,-54 -54,-54z"/>
+    
+    <!-- Small white highlight circle in top-right -->
+    <path
+        android:fillColor="#FFF8E8"
+        android:pathData="M138,78c-11.04,0 -20,8.96 -20,20s8.96,20 20,20 20,-8.96 20,-20 -8.96,-20 -20,-20z"/>
+</vector>

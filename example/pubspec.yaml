@@ -1,0 +1,33 @@
+name: rapid_kit_example
+description: "Shows how to use rapid_kit."
+publish_to: 'none'
+version: 1.0.0+1 
+environment:  
+  sdk: '>=2.19.6 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  rapid_kit:
+    path: ../
+  
+  http: 0.13.6
+  cupertino_icons: ^1.0.6
+  flutter_spinkit: 5.2.1
+  timeline_tile: ^2.0.0
+  mobile_scanner: 6.0.11
+  timezone: ^0.9.4
+  url_launcher: ^6.1.14
+ 
+dev_dependencies:
+  integration_test:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  config:
+    enable-swift-package-manager: false
+  uses-material-design: true

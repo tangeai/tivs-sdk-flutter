@@ -1,0 +1,60 @@
+def rapidKitVersion = new File(projectDir, "binaries.lock").text.trim()
+def captchaVersion = "3.6.2"
+
+buildscript {
+    ext.kotlin_version = "2.1.0"
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.9.1")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+    }
+}
+
+allprojects {
+    repositories {
+        exclusiveContent {
+            forRepository {
+                maven { url = uri("${project.projectDir}/native-maven") }
+            }
+            filter { includeModule("com.tange.ai", "RapidKit") }
+        }
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+
+android {
+    namespace = "com.tange.ai.rapid_kit"
+
+    compileSdk = 35
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+    }
+
+    defaultConfig {
+        minSdk = 21
+    }
+
+    dependencies {
+        implementation "com.tange.ai:RapidKit:${rapidKitVersion}"
+        implementation "io.github.yidun:captcha:${captchaVersion}"
+        testImplementation "junit:junit:4.13.2"
+    }
+}

@@ -1,0 +1,6 @@
+framework module RapidKit {
+  umbrella header "RapidKit.h"
+  export *
+
+  module * { export * }
+}

@@ -1,0 +1,19 @@
+{
+  "author": "",
+  "dependencies": {
+    "@ohos/flutter_ohos": "file:./har/flutter.har"
+  },
+  "description": "Please describe the basic information.",
+  "devDependencies": {
+    "@ohos/hypium": "1.0.6"
+  },
+  "license": "",
+  "main": "",
+  "modelVersion": "5.0.0",
+  "name": "rapid_kit",
+  "overrides": {
+    "@ohos/flutter_module": "file:./entry",
+    "@ohos/flutter_ohos": "file:./har/flutter.har"
+  },
+  "version": "1.0.0"
+}

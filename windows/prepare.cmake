@@ -1,0 +1,6 @@
+set(RAPID_WINDOWS_SDK_ROOT "${CMAKE_CURRENT_LIST_DIR}/native/x64")
+include("${CMAKE_CURRENT_LIST_DIR}/validate.cmake")
+rapid_windows_sdk_validate("${RAPID_WINDOWS_SDK_ROOT}" SDK_COMPLETE MISSING_FILES)
+if(NOT SDK_COMPLETE)
+  message(FATAL_ERROR "Bundled Windows SDK is incomplete: ${MISSING_FILES}")
+endif()

@@ -1,0 +1,493 @@
+{
+  "schema": "rapid.linux-dependencies.v1",
+  "system_libraries": [
+    "ld-linux-aarch64.so.1",
+    "ld-linux-x86-64.so.2",
+    "libanl.so.1",
+    "libc.so.6",
+    "libdl.so.2",
+    "libgcc_s.so.1",
+    "libm.so.6",
+    "libmvec.so.1",
+    "libpthread.so.0",
+    "libresolv.so.2",
+    "librt.so.1",
+    "libstdc++.so.6",
+    "libutil.so.1"
+  ],
+  "libc_floor": "glibc>=2.39",
+  "patchelf": "patchelf 0.18.0",
+  "files": [
+    {
+      "path": "core/lib/libFLAC.so.12",
+      "input_sha256": "a547ee7c9ac918e0432950790bf8beab0f86c6c143a3d6a8e9e5fc35553f6d56",
+      "sha256": "85f31a8adf13a555402ba4a33a6bd3b9301af9dceabec977fd973a956d32d3e2",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libm.so.6",
+        "libogg.so.0"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libRapidCore.so",
+      "input_sha256": "764f5d7ec8db354c97d53a4b6133ffa4ce036ba558976b894d5178e9165090f9",
+      "sha256": "764f5d7ec8db354c97d53a4b6133ffa4ce036ba558976b894d5178e9165090f9",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libgcc_s.so.1",
+        "libm.so.6",
+        "libstdc++.so.6",
+        "libz.so.1"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libX11-xcb.so.1",
+      "input_sha256": "184488e82500e347251f9c31c4a9535b828e669208976c8f8bda6926bc977f7d",
+      "sha256": "1a7f4dcad3451b2bfd763716aaa687045114e0f45ade1c0dab83ebb473a30e70",
+      "needed": [],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libX11.so.6",
+      "input_sha256": "f26491f53363c4597d4e3928d780d2f16fd174c60e9fccb24f51b6b2e72acbe5",
+      "sha256": "e080b0017683c4907aaa58b0c94628ccc66152364969ddd1f52b2d3ddc463d43",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libxcb.so.1"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libXau.so.6",
+      "input_sha256": "6fff1a9d4b5bc4d91df752b12600f8aedcd8ac33ea01a48295326675243d68c0",
+      "sha256": "15c667e10a892f1f00a2f0533eaa28943ad476f01b2d556a712b83dd3bbc68f8",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libXdmcp.so.6",
+      "input_sha256": "84b6623297efd8eb43f98af678acbb68ca31de7617dab042a1dcc7c6feb8a2ea",
+      "sha256": "c4903cd328a3236b86ba5c01a6ede2295e771b22451a10f4feaa7797bfd40a3e",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libbsd.so.0",
+        "libc.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libapparmor.so.1",
+      "input_sha256": "d6d64963817f70b55203214453697ae9df5f0fdbd884b8115df20e8f0187bc85",
+      "sha256": "3f2f130ee96d9b666d012adc3893dc9116983124aff428884f0866d903e8b16f",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libasyncns.so.0",
+      "input_sha256": "fdc62a2e1fa5b3ebd6d6bc801b5d9627dec695c8c83c49e02cfa81396b610326",
+      "sha256": "5cce7caf9031661f5cdc760ae5f0ae85b727dd7c890d09ae4bcc818121127d07",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libbsd.so.0",
+      "input_sha256": "6c5348ee0e1777f13e148b7492fa311b6f65adb0dc21a001a67ebc18948e6b3e",
+      "sha256": "f5d1af0e97d67a17aa29ef88fa4be8027abfe630f6bcc855b1b85aa86ea2556b",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libmd.so.0"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libcap.so.2",
+      "input_sha256": "1b6d3932cf8b60b2f27f80cdd26d9a296b8a9608fc02b4eccb8fb2fdab73fea2",
+      "sha256": "14150aa10f66dec53797665968f0a6d93641ff322b9c00ff701261ed86c3289c",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libdbus-1.so.3",
+      "input_sha256": "9b8d0d8b10bdffc68f6699b03e7be99d4dc40552aca189be43b55c5f84753241",
+      "sha256": "0a536038912c900dc55426d019fa66ce03125ef4c2073b6948fc4f0f11892320",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libsystemd.so.0"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libdrm.so.2",
+      "input_sha256": "efa8992c21c657acb37e3fa63653161b53a9d73a0828851c9b725fa5e35cadf3",
+      "sha256": "18d7a5caa03f99014802c9e12ff02c968fe4bcc085cef5798791154ab43b02e1",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libgcrypt.so.20",
+      "input_sha256": "0021b10f8cf217477b73eb3721ed5711c02f77d9251a346552f6099928329151",
+      "sha256": "a1e7a456509309c08c9049d5551778b1b10ca1bc510971b3cbb521aef6561b5b",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libgpg-error.so.0"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libgpg-error.so.0",
+      "input_sha256": "ff2dccba4993ef97775b70c1ed1144f70dfe8581ee48c1eb25c76878c6cdfdf7",
+      "sha256": "7983c6b371e4aca4027e917b9f02d751c5260205b073aa2754c037dc15271bf8",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/liblz4.so.1",
+      "input_sha256": "d1482a2f74152881d8b83708fedae7bca039f5608024f1178dc21a17df9887a7",
+      "sha256": "f656488478b8b4ddcdd987c6342c6cf0214e181ea8a94bafb0026fdcde5883a9",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/liblzma.so.5",
+      "input_sha256": "50e9207a39bea9767f8ceaf464655953622ac3bac7ac5d24433f207f810cbd80",
+      "sha256": "7cebe309d6b57f64756a2c0fae5e4ec2926275669987fe6afca4eae2a8cf34bc",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libmd.so.0",
+      "input_sha256": "30d117046ce9405745e0d0d4722cff121f532913180bbb9425b38d076319ac08",
+      "sha256": "eee398d0f53e543b9efc75b3509bb5010f6720076d0452dbea839dd228e42442",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libmp3lame.so.0",
+      "input_sha256": "2bd9422e3f287a648eb150bc5ee7eeea228a522dfb7d1491a5548fa7842b677e",
+      "sha256": "fd3e34803033b6dfd7f63acfe9fa8c8ce99eac9d513411079211ffafac09187c",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libm.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libmpg123.so.0",
+      "input_sha256": "a7e2858dbb474686f75d4082e84f26eca06d942a3982c9f0da5b7dad95c61147",
+      "sha256": "13297eb67119b98633149547dda2cdbbb64af1e7581b6cf7b09bbdb96b7138af",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libm.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libogg.so.0",
+      "input_sha256": "888224cbf3e81f365449d66c444efcf02b46271c598de929a2e51c77486663f4",
+      "sha256": "41789528d8ccc0beee5a499de57a0f5b3daea364e396ec764ad16a2b66df8329",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libopus.so.0",
+      "input_sha256": "a346225ddd7a5964d718b51cd148639f80f6e3e2b17b3c73cc87ac82222314a5",
+      "sha256": "4b87a0883562cb9b7e416ef8a3a4eb5e8266ef97487c1beb841a28d8b52be4ec",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libm.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libpulse-simple.so.0",
+      "input_sha256": "dbcee202125d45c6a99c092efed64419519d7cea5be4c57d12fd0ca2b371e992",
+      "sha256": "1c398d77aadc780494a896a96b9673afe64f66d2443447ffca7409059fa917d1",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libpulse.so.0",
+        "libpulsecommon-16.1.so"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libpulse.so.0",
+      "input_sha256": "cca7dd98ddd32c558885362b9b5fa1065ac4c5fe0c6393960ec9c85671e6f6c8",
+      "sha256": "cfa139177962b4f4c77b3a57cd4e98d2b2f63acb75042fc300e093ccd1d60f5b",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libdbus-1.so.3",
+        "libm.so.6",
+        "libpulsecommon-16.1.so"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libpulsecommon-16.1.so",
+      "input_sha256": "b972e84100fc6043a30bf626808e712d7647f841d2c59a0ade2f5cba76061bdb",
+      "sha256": "29e5b1a588ead07254c52480ee83e572cfaf67abb44d2509597f38ba8c0ce233",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libX11-xcb.so.1",
+        "libX11.so.6",
+        "libapparmor.so.1",
+        "libasyncns.so.0",
+        "libc.so.6",
+        "libdbus-1.so.3",
+        "libm.so.6",
+        "libsndfile.so.1",
+        "libsystemd.so.0",
+        "libxcb.so.1"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libsndfile.so.1",
+      "input_sha256": "2a44435dc9a00828d0e734eba66ed2a25b960b4946d957a5817750e8f246d652",
+      "sha256": "87d71d8e333620aef58ae7578f50e12ee1b7b57288897f0d38ae75a35fb5ba90",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libFLAC.so.12",
+        "libc.so.6",
+        "libm.so.6",
+        "libmp3lame.so.0",
+        "libmpg123.so.0",
+        "libogg.so.0",
+        "libopus.so.0",
+        "libvorbis.so.0",
+        "libvorbisenc.so.2"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libsystemd.so.0",
+      "input_sha256": "6c2255f2d61559d51ef711dae7172555930ad12557def699271549949edc1241",
+      "sha256": "ac44e0cca57478ec04de6ac688a55cb7d36549031d5a7c6278541cf052cd7fdd",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libcap.so.2",
+        "libgcrypt.so.20",
+        "liblz4.so.1",
+        "liblzma.so.5",
+        "libzstd.so.1"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libva-drm.so.2",
+      "input_sha256": "a632cee4666a0ad19f0c4d038fe2ff2d69765720deade6dfacdf906f79803e93",
+      "sha256": "f5c6f9cbf4d869af969cdf4874ec834b5c9c864b36ae51e8cb8b69856fab0413",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libdrm.so.2",
+        "libva.so.2"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libva.so.2",
+      "input_sha256": "7423b8b440db28518e394151ffdee99c92542778b62e7479a4f27df714f697de",
+      "sha256": "455ed4c126ce65cfc66579100061521fb99814726118a163811803739d239e68",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libvorbis.so.0",
+      "input_sha256": "10601a705b62bfd00ea6741b7a167129b918eb9f5ed9f5bd835ce3d94b0bc156",
+      "sha256": "03a57d425dc28867fddee407e06625c9071964ff8b8cf6a501f1de9895f2eb02",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libm.so.6",
+        "libogg.so.0"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libvorbisenc.so.2",
+      "input_sha256": "602d16f3b6e7ff62d4fbfcdf5cfc9a2fc7eae187add4f4313eac4b5380f91ffb",
+      "sha256": "f50a6c24d2af71c0291c9f796f2cda4a7348152ca88d68dc053b453463bce78d",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libvorbis.so.0"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libwebrtc.so",
+      "input_sha256": "bd24fd97380111be4bd1d28d83bb0bd1ca5855df2ac55c1ba3ebf14764832dae",
+      "sha256": "356f4f481d0e52e696c029b110a02c22b51e6c70fdf503fff73b1811c8b07e43",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libgcc_s.so.1",
+        "libm.so.6",
+        "libpthread.so.0",
+        "libstdc++.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libxcb.so.1",
+      "input_sha256": "cc570b1aff9e2ffe32c1add5aa23cb65b041a3615810566bb32efcc0c3f83f28",
+      "sha256": "3a6135fc3be9bcb77b175510320314b8330614fe867ddfce3b008620b7596954",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libXau.so.6",
+        "libXdmcp.so.6",
+        "libc.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libz.so.1",
+      "input_sha256": "52a1d5c0cbffb3596c7f0636cb1af8e131e00eb77ff92d1353057d5161d420d3",
+      "sha256": "c4ae4e673471eeccb86b81d4929484a659bbf8ec7ab5161dcec95acb07a75fd2",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "core/lib/libzstd.so.1",
+      "input_sha256": "fe726238b170b83aa83bf1f8a79109b8b61b9eb45234304511d093bbe5f5fb20",
+      "sha256": "f2ef9f9b24dda39195e1fe55a2e86ed8213f0c60156d8ddd2ee86e253a4d3c0b",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "lib/libRapidCore.so",
+      "input_sha256": "764f5d7ec8db354c97d53a4b6133ffa4ce036ba558976b894d5178e9165090f9",
+      "sha256": "764f5d7ec8db354c97d53a4b6133ffa4ce036ba558976b894d5178e9165090f9",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libc.so.6",
+        "libgcc_s.so.1",
+        "libm.so.6",
+        "libstdc++.so.6",
+        "libz.so.1"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "lib/libRapidMedia.so",
+      "input_sha256": "26c068bf551ca9e38b28579563bbeb719dc62cc116a39a51bf548849c5db7e6b",
+      "sha256": "5bd35a026cf36b37722aa478f74f367ba8bdc27585faedfb27831a9dd5684913",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libRapidCore.so",
+        "libRapidSDL.so",
+        "libc.so.6",
+        "libgcc_s.so.1",
+        "libm.so.6",
+        "libmvec.so.1",
+        "libstdc++.so.6",
+        "libva-drm.so.2",
+        "libva.so.2",
+        "libz.so.1"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "lib/libRapidSDL.so",
+      "input_sha256": "bf863b6ce36bfe474e6288de2cb2e0ee7d0d76ec7bfceff18dfe9f12074ca233",
+      "sha256": "533a0954bdef0bc4241f2248cc7c417eb3d16992435d1feccb625594746ec39f",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libRapidCore.so",
+        "libc.so.6",
+        "libgcc_s.so.1",
+        "libpulse-simple.so.0",
+        "libpulse.so.0",
+        "libstdc++.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "media/lib/libRapidMedia.so",
+      "input_sha256": "26c068bf551ca9e38b28579563bbeb719dc62cc116a39a51bf548849c5db7e6b",
+      "sha256": "5bd35a026cf36b37722aa478f74f367ba8bdc27585faedfb27831a9dd5684913",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libRapidCore.so",
+        "libRapidSDL.so",
+        "libc.so.6",
+        "libgcc_s.so.1",
+        "libm.so.6",
+        "libmvec.so.1",
+        "libstdc++.so.6",
+        "libva-drm.so.2",
+        "libva.so.2",
+        "libz.so.1"
+      ],
+      "runpath": "$ORIGIN"
+    },
+    {
+      "path": "sdl/lib/libRapidSDL.so",
+      "input_sha256": "bf863b6ce36bfe474e6288de2cb2e0ee7d0d76ec7bfceff18dfe9f12074ca233",
+      "sha256": "533a0954bdef0bc4241f2248cc7c417eb3d16992435d1feccb625594746ec39f",
+      "needed": [
+        "ld-linux-aarch64.so.1",
+        "libRapidCore.so",
+        "libc.so.6",
+        "libgcc_s.so.1",
+        "libpulse-simple.so.0",
+        "libpulse.so.0",
+        "libstdc++.so.6"
+      ],
+      "runpath": "$ORIGIN"
+    }
+  ]
+}
