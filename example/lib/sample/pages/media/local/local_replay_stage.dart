@@ -155,12 +155,10 @@ class LocalReplayStage extends StatelessWidget {
                   height: videoHeight,
                   message: 'Paused',
                 ),
-              Positioned(
-                key: const ValueKey('rapid-local-replay-stats-position'),
-                left: 10,
-                right: 10,
-                bottom: 10,
-                child: stats,
+              _ReplayStatsOverlay(
+                stats: stats,
+                width: width,
+                height: videoHeight,
               ),
               if (!showConnectionError && topRightOverlay != null)
                 Positioned(
@@ -251,6 +249,100 @@ class LocalReplayStage extends StatelessWidget {
               timedOut: bufferingTimedOut,
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _ReplayStatsOverlay extends StatefulWidget {
+  final Widget stats;
+  final double width;
+  final double height;
+
+  const _ReplayStatsOverlay({
+    required this.stats,
+    required this.width,
+    required this.height,
+  });
+
+  @override
+  State<_ReplayStatsOverlay> createState() => _ReplayStatsOverlayState();
+}
+
+class _ReplayStatsOverlayState extends State<_ReplayStatsOverlay> {
+  static const double _inset = 10;
+  static const double _collapsedSize = 36;
+  static const double _expandedHeight = 40;
+
+  Offset? _position;
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.width < 100 || widget.height < 60) {
+      return const SizedBox.shrink();
+    }
+
+    final overlayWidth =
+        _expanded ? math.min(360.0, widget.width - _inset * 2) : _collapsedSize;
+    final overlayHeight = _expanded ? _expandedHeight : _collapsedSize;
+    final maxLeft = widget.width - overlayWidth - _inset;
+    final maxTop = widget.height - overlayHeight - _inset;
+    final current = _position ?? Offset(_inset, maxTop);
+    final position = Offset(
+      current.dx.clamp(_inset, maxLeft).toDouble(),
+      current.dy.clamp(_inset, maxTop).toDouble(),
+    );
+
+    return Positioned(
+      key: const ValueKey('rapid-local-replay-stats-position'),
+      left: position.dx,
+      top: position.dy,
+      width: overlayWidth,
+      height: overlayHeight,
+      child: GestureDetector(
+        onPanUpdate: (details) {
+          setState(() {
+            final latest = _position ?? position;
+            _position = Offset(
+              (latest.dx + details.delta.dx).clamp(_inset, maxLeft).toDouble(),
+              (latest.dy + details.delta.dy).clamp(_inset, maxTop).toDouble(),
+            );
+          });
+        },
+        child: Material(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          elevation: 2,
+          child: _expanded
+              ? Row(
+                  children: [
+                    const Icon(Icons.drag_indicator,
+                        size: 18, color: Colors.black54),
+                    Expanded(child: SizedBox(height: 28, child: widget.stats)),
+                    IconButton(
+                      key: const ValueKey('rapid-local-replay-stats-collapse'),
+                      tooltip: 'Collapse logs',
+                      onPressed: () => setState(() => _expanded = false),
+                      icon: const Icon(Icons.close, size: 18),
+                      padding: EdgeInsets.zero,
+                      constraints:
+                          const BoxConstraints.tightFor(width: 36, height: 36),
+                    ),
+                  ],
+                )
+              : IconButton(
+                  key: const ValueKey('rapid-local-replay-stats-expand'),
+                  tooltip: 'Show logs',
+                  onPressed: () => setState(() => _expanded = true),
+                  icon: const Icon(Icons.article_outlined, size: 18),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints.tightFor(
+                    width: _collapsedSize,
+                    height: _collapsedSize,
+                  ),
+                ),
+        ),
       ),
     );
   }

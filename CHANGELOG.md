@@ -1,3 +1,8 @@
+## 1.7.4-alpha.1
+2026-11-10
+- Document a known H.265 local replay picture corruption issue: split or malformed encoded packets can trigger `invalid_nal_framing` and decoder input errors.
+- Packet-level capture and a native repair are pending; this release updates the package version and issue status only.
+
 ## 1.7.3-alpha.20
 2026-11-06
 - Pin Android, iOS, macOS, Windows, Linux and OHOS native SDKs to 1.7.3-alpha.20.
