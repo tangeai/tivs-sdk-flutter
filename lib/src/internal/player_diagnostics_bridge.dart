@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart' show internal, kDebugMode;
+import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:meta/meta.dart' show internal;
 
 final Expando<void Function(bool)> _videoFrameDumpControls =
     Expando<void Function(bool)>('videoFrameDumpControls');

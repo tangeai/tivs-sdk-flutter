@@ -575,12 +575,12 @@ class _LiveStreamWidgetState extends State<LiveStreamWidget>
           height: kBottomOverlayIntercomPillHeight,
           padding: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.55),
+            color: Colors.black.withAlpha(140),
             borderRadius: BorderRadius.circular(
               kBottomOverlayIntercomPillHeight / 2,
             ),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.16),
+              color: Colors.white.withAlpha(41),
               width: 0.8,
             ),
           ),

@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'rapid_kit'
-  s.version          = '1.8.0-alpha.2'
+  s.version          = '1.8.0-alpha.3'
   s.summary          = 'Real-time Audio-visual Platform for IoT Devices by tange-ai'
   s.description      = <<-DESC
 Real-time Audio-visual Platform for IoT Devices by tange-ai

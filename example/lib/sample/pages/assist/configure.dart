@@ -125,7 +125,7 @@ class _ConfigurePageState extends LifecycleAwareState<ConfigurePage> {
             child: Divider(
               height: 1,
               thickness: 0.5,
-              color: SampleThemeConfigure.colorTextHint.withValues(alpha: 0.1),
+              color: SampleThemeConfigure.colorTextHint.withAlpha(26),
             ),
           ),
           _packageNameInput(grouped: true),
@@ -158,7 +158,7 @@ class _ConfigurePageState extends LifecycleAwareState<ConfigurePage> {
       child: Column(
         children: ListTile.divideTiles(
           context: context,
-          color: SampleThemeConfigure.colorTextHint.withValues(alpha: 0.1),
+          color: SampleThemeConfigure.colorTextHint.withAlpha(26),
           tiles: rows,
         ).toList(),
       ),

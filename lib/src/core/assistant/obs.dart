@@ -88,7 +88,7 @@ class _ObsWidgetState extends State<ObsWidget> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: Colors.blue.withValues(alpha: 0.5),
+            color: Colors.blue.withAlpha(128),
             width: 0.8,
           ),
         ),
@@ -233,7 +233,7 @@ class _ObsBottomSheetState extends State<_ObsBottomSheet> {
       padding: const EdgeInsets.fromLTRB(20, 16, 16, 16),
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: const Color(0xFF659287).withValues(alpha: 0.3), width: 0.5),
+          bottom: BorderSide(color: const Color(0xFF659287).withAlpha(77), width: 0.5),
         ),
       ),
       child: Row(
@@ -257,7 +257,7 @@ class _ObsBottomSheetState extends State<_ObsBottomSheet> {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: const Color(0xFF659287).withValues(alpha: 0.2),
+              color: const Color(0xFF659287).withAlpha(51),
               borderRadius: BorderRadius.circular(16),
             ),
             child: IconButton(
@@ -316,16 +316,16 @@ class _ObsBottomSheetState extends State<_ObsBottomSheet> {
       fontSize: 12,
       height: 1.35,
       fontWeight: FontWeight.w500,
-      color: color.withValues(alpha: 0.95),
+      color: color.withAlpha(242),
     );
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.05),
+        color: color.withAlpha(13),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
+        border: Border.all(color: color.withAlpha(51), width: 1),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -548,9 +548,9 @@ class _RenderPerfWidgetState extends State<RenderPerfWidget> {
         height: _kObsActionHeight,
         padding: const EdgeInsets.symmetric(horizontal: 7),
         decoration: BoxDecoration(
-          color: _kObsActionColor.withValues(alpha: 0.08),
+          color: _kObsActionColor.withAlpha(20),
           borderRadius: BorderRadius.circular(999),
-          border: Border.all(color: _kObsActionColor.withValues(alpha: 0.35), width: 0.8),
+          border: Border.all(color: _kObsActionColor.withAlpha(89), width: 0.8),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

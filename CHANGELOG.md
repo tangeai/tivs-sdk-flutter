@@ -1,3 +1,8 @@
+## 1.7.3-alpha.20
+2026-11-06
+- Pin Android, iOS, macOS, Windows, Linux and OHOS native SDKs to 1.7.3-alpha.20.
+- Validate the traceable cross-platform release pipeline before the 1.7.3 stable release.
+
 ## 1.7.3-alpha.18
 2026-11-02
 - Pin Android, iOS, macOS, Windows, Linux and OHOS native SDKs to RapidKit 1.7.3-alpha.18.

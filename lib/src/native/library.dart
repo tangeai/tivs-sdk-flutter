@@ -10,7 +10,8 @@ import 'dart:convert';
 import 'package:ffi/ffi.dart';
 import 'dart:typed_data';
 import 'ffi/library.dart';
-import 'package:flutter/foundation.dart' show internal, kDebugMode;
+import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:meta/meta.dart' show internal;
 
 import '../toolbox/logging.dart';
 
