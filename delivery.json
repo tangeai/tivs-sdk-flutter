@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "3rd.lock": "269e53eaaa8cd0752aaa48d31eab22b1f11177c83d723fefc4b29822c152f970",
-    "flutter.pubspec.lock": "c3d71930002b82e45afba2d1fe092ea500214fa12ca1ed9df86fc92833ee8139"
+    "flutter.pubspec.lock": "af263526590e9392e7132de2910b37d29b109e3988a435636b5faff8c0cf34fa"
   },
   "native_transformations": [
     {
@@ -12,9 +12,9 @@
       "target": "linux-x64"
     },
     {
-      "input_sha256": "985d99a70b700cf29419c47e231b635e0b31b7473cb4db875b74e276e4dde8a3",
+      "input_sha256": "869200b81735f37895e0aaa3b1085cd058047439b699544d29b93aa0d123e1b0",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "9e7cf894dd0815598ae70e4b2b2c1bf9d47cc68c36741b29e04bfc6f7a6c77ef",
+      "output_sha256": "87dc635f5eaff17cfb554436f2fc9a71d0dca740a3b327e892df86c71dcae9fc",
       "path": "linux/native/x64/core/lib/libRapidCore.so",
       "target": "linux-x64"
     },
@@ -229,23 +229,23 @@
       "target": "linux-x64"
     },
     {
-      "input_sha256": "985d99a70b700cf29419c47e231b635e0b31b7473cb4db875b74e276e4dde8a3",
+      "input_sha256": "869200b81735f37895e0aaa3b1085cd058047439b699544d29b93aa0d123e1b0",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "9e7cf894dd0815598ae70e4b2b2c1bf9d47cc68c36741b29e04bfc6f7a6c77ef",
+      "output_sha256": "87dc635f5eaff17cfb554436f2fc9a71d0dca740a3b327e892df86c71dcae9fc",
       "path": "linux/native/x64/lib/libRapidCore.so",
       "target": "linux-x64"
     },
     {
-      "input_sha256": "33c1fe4e19e2a82fe6965f888afa8a12d613578a740886925064c35f4e6b9c98",
+      "input_sha256": "4211d02a230961853c32af56e8cc2ae859c4984e1014d9765b2dc3e3cedd8045",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "94f6ed772d09f5abaf6c8e8dac230a5ccdca4d7faf6dfaa18c9466fddc9c5fcf",
+      "output_sha256": "fe6963739d7e33dff39a5764ee9106cde22e07d2a6d11fe27c2f2434b25043c8",
       "path": "linux/native/x64/lib/libRapidMedia.so",
       "target": "linux-x64"
     },
     {
-      "input_sha256": "877e78addeb5c1fa66a73ce58dcc4c318716ef4fe7ab65561e122aa729a3d48b",
+      "input_sha256": "08ffec5524f873f10f1dfa125530402c88851b958f44b4c2204be47f50eccb33",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "28a1f134210a1c1eed5efc7097ea45b6ccc215cd2c70963143e1c9830b0b6d09",
+      "output_sha256": "0903616f07a42f05611bd6affbd1a696e442d4280eeb2ebcaaddc3dab6018f2d",
       "path": "linux/native/x64/lib/libRapidSDL.so",
       "target": "linux-x64"
     },
@@ -257,23 +257,23 @@
       "target": "linux-x64"
     },
     {
-      "input_sha256": "985d99a70b700cf29419c47e231b635e0b31b7473cb4db875b74e276e4dde8a3",
+      "input_sha256": "869200b81735f37895e0aaa3b1085cd058047439b699544d29b93aa0d123e1b0",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "9e7cf894dd0815598ae70e4b2b2c1bf9d47cc68c36741b29e04bfc6f7a6c77ef",
+      "output_sha256": "87dc635f5eaff17cfb554436f2fc9a71d0dca740a3b327e892df86c71dcae9fc",
       "path": "linux/native/x64/libraries/libRapidCore.so",
       "target": "linux-x64"
     },
     {
-      "input_sha256": "33c1fe4e19e2a82fe6965f888afa8a12d613578a740886925064c35f4e6b9c98",
+      "input_sha256": "4211d02a230961853c32af56e8cc2ae859c4984e1014d9765b2dc3e3cedd8045",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "94f6ed772d09f5abaf6c8e8dac230a5ccdca4d7faf6dfaa18c9466fddc9c5fcf",
+      "output_sha256": "fe6963739d7e33dff39a5764ee9106cde22e07d2a6d11fe27c2f2434b25043c8",
       "path": "linux/native/x64/libraries/libRapidMedia.so",
       "target": "linux-x64"
     },
     {
-      "input_sha256": "877e78addeb5c1fa66a73ce58dcc4c318716ef4fe7ab65561e122aa729a3d48b",
+      "input_sha256": "08ffec5524f873f10f1dfa125530402c88851b958f44b4c2204be47f50eccb33",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "28a1f134210a1c1eed5efc7097ea45b6ccc215cd2c70963143e1c9830b0b6d09",
+      "output_sha256": "0903616f07a42f05611bd6affbd1a696e442d4280eeb2ebcaaddc3dab6018f2d",
       "path": "linux/native/x64/libraries/libRapidSDL.so",
       "target": "linux-x64"
     },
@@ -488,16 +488,16 @@
       "target": "linux-x64"
     },
     {
-      "input_sha256": "33c1fe4e19e2a82fe6965f888afa8a12d613578a740886925064c35f4e6b9c98",
+      "input_sha256": "4211d02a230961853c32af56e8cc2ae859c4984e1014d9765b2dc3e3cedd8045",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "94f6ed772d09f5abaf6c8e8dac230a5ccdca4d7faf6dfaa18c9466fddc9c5fcf",
+      "output_sha256": "fe6963739d7e33dff39a5764ee9106cde22e07d2a6d11fe27c2f2434b25043c8",
       "path": "linux/native/x64/media/lib/libRapidMedia.so",
       "target": "linux-x64"
     },
     {
-      "input_sha256": "877e78addeb5c1fa66a73ce58dcc4c318716ef4fe7ab65561e122aa729a3d48b",
+      "input_sha256": "08ffec5524f873f10f1dfa125530402c88851b958f44b4c2204be47f50eccb33",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "28a1f134210a1c1eed5efc7097ea45b6ccc215cd2c70963143e1c9830b0b6d09",
+      "output_sha256": "0903616f07a42f05611bd6affbd1a696e442d4280eeb2ebcaaddc3dab6018f2d",
       "path": "linux/native/x64/sdl/lib/libRapidSDL.so",
       "target": "linux-x64"
     },
@@ -509,9 +509,9 @@
       "target": "linux-arm64"
     },
     {
-      "input_sha256": "94400c2ebb065afae8ae459de70e73f9ccac9e9f32b4cadb7c3cd72713c58113",
+      "input_sha256": "e35769c70f2b6f708506004b7edcf90545536c986e15b9f854b58f70e3d10880",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "8d95f1c608362059fa03b51ab3afb80d8b3cf29b7ea13676556c85309cc1dcb9",
+      "output_sha256": "57543c81160799276590d5b2d40cbd1d59885b80e3f55bf9524012a8ba48c6a2",
       "path": "linux/native/arm64/core/lib/libRapidCore.so",
       "target": "linux-arm64"
     },
@@ -740,23 +740,23 @@
       "target": "linux-arm64"
     },
     {
-      "input_sha256": "94400c2ebb065afae8ae459de70e73f9ccac9e9f32b4cadb7c3cd72713c58113",
+      "input_sha256": "e35769c70f2b6f708506004b7edcf90545536c986e15b9f854b58f70e3d10880",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "8d95f1c608362059fa03b51ab3afb80d8b3cf29b7ea13676556c85309cc1dcb9",
+      "output_sha256": "57543c81160799276590d5b2d40cbd1d59885b80e3f55bf9524012a8ba48c6a2",
       "path": "linux/native/arm64/lib/libRapidCore.so",
       "target": "linux-arm64"
     },
     {
-      "input_sha256": "088bc1ced51b202106a9f79695ab321819c0b867834a3a0272809e637f3fbea1",
+      "input_sha256": "663ac9bc0bc51d2e19316a5d4d96472225914de4a862ec39e800071255ac5984",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "10781b99fa7405cf7790262bc142cb332f4d3e1d97fab7b18a56e37df5d29b6e",
+      "output_sha256": "cd791b34e52dd3281152504c1cf307503259d5692026b8065f72f236a7167e14",
       "path": "linux/native/arm64/lib/libRapidMedia.so",
       "target": "linux-arm64"
     },
     {
-      "input_sha256": "3eb5fb1e7ceaabcd6b0aa998832ec20f5fbcc0586a25f8630bcb36739d2f439c",
+      "input_sha256": "778d9c76ea96a69016f6a96275ccb8e622aafd502b69f77d16ee9af389a0a59f",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "f425582811777390b43cfbacfea5ce963f1b873257000985d711d2a6ba498728",
+      "output_sha256": "930c257f017af8ccf4ce610138096bd963ea312c72e6647d28ede4e438955ad1",
       "path": "linux/native/arm64/lib/libRapidSDL.so",
       "target": "linux-arm64"
     },
@@ -768,23 +768,23 @@
       "target": "linux-arm64"
     },
     {
-      "input_sha256": "94400c2ebb065afae8ae459de70e73f9ccac9e9f32b4cadb7c3cd72713c58113",
+      "input_sha256": "e35769c70f2b6f708506004b7edcf90545536c986e15b9f854b58f70e3d10880",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "8d95f1c608362059fa03b51ab3afb80d8b3cf29b7ea13676556c85309cc1dcb9",
+      "output_sha256": "57543c81160799276590d5b2d40cbd1d59885b80e3f55bf9524012a8ba48c6a2",
       "path": "linux/native/arm64/libraries/libRapidCore.so",
       "target": "linux-arm64"
     },
     {
-      "input_sha256": "088bc1ced51b202106a9f79695ab321819c0b867834a3a0272809e637f3fbea1",
+      "input_sha256": "663ac9bc0bc51d2e19316a5d4d96472225914de4a862ec39e800071255ac5984",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "10781b99fa7405cf7790262bc142cb332f4d3e1d97fab7b18a56e37df5d29b6e",
+      "output_sha256": "cd791b34e52dd3281152504c1cf307503259d5692026b8065f72f236a7167e14",
       "path": "linux/native/arm64/libraries/libRapidMedia.so",
       "target": "linux-arm64"
     },
     {
-      "input_sha256": "3eb5fb1e7ceaabcd6b0aa998832ec20f5fbcc0586a25f8630bcb36739d2f439c",
+      "input_sha256": "778d9c76ea96a69016f6a96275ccb8e622aafd502b69f77d16ee9af389a0a59f",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "f425582811777390b43cfbacfea5ce963f1b873257000985d711d2a6ba498728",
+      "output_sha256": "930c257f017af8ccf4ce610138096bd963ea312c72e6647d28ede4e438955ad1",
       "path": "linux/native/arm64/libraries/libRapidSDL.so",
       "target": "linux-arm64"
     },
@@ -1013,22 +1013,22 @@
       "target": "linux-arm64"
     },
     {
-      "input_sha256": "088bc1ced51b202106a9f79695ab321819c0b867834a3a0272809e637f3fbea1",
+      "input_sha256": "663ac9bc0bc51d2e19316a5d4d96472225914de4a862ec39e800071255ac5984",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "10781b99fa7405cf7790262bc142cb332f4d3e1d97fab7b18a56e37df5d29b6e",
+      "output_sha256": "cd791b34e52dd3281152504c1cf307503259d5692026b8065f72f236a7167e14",
       "path": "linux/native/arm64/media/lib/libRapidMedia.so",
       "target": "linux-arm64"
     },
     {
-      "input_sha256": "3eb5fb1e7ceaabcd6b0aa998832ec20f5fbcc0586a25f8630bcb36739d2f439c",
+      "input_sha256": "778d9c76ea96a69016f6a96275ccb8e622aafd502b69f77d16ee9af389a0a59f",
       "operation": "llvm-strip --strip-debug",
-      "output_sha256": "f425582811777390b43cfbacfea5ce963f1b873257000985d711d2a6ba498728",
+      "output_sha256": "930c257f017af8ccf4ce610138096bd963ea312c72e6647d28ede4e438955ad1",
       "path": "linux/native/arm64/sdl/lib/libRapidSDL.so",
       "target": "linux-arm64"
     }
   ],
   "schema": "rapid.sdk-delivery.v1",
-  "source_commit": "98f886dbb79ae5c22c5b59ab2b6dd5228312ed0b",
+  "source_commit": "e5b2a31c921c520d6f1e8a80bc1ee706e2abc2cd",
   "targets": [
     "android-arm64",
     "ios-arm64",
@@ -1038,5 +1038,5 @@
     "linux-x64",
     "linux-arm64"
   ],
-  "version": "1.8.0-alpha.12"
+  "version": "1.8.0-alpha.13"
 }

@@ -32,8 +32,8 @@
     },
     {
       "path": "core/lib/libRapidCore.so",
-      "input_sha256": "94400c2ebb065afae8ae459de70e73f9ccac9e9f32b4cadb7c3cd72713c58113",
-      "sha256": "94400c2ebb065afae8ae459de70e73f9ccac9e9f32b4cadb7c3cd72713c58113",
+      "input_sha256": "e35769c70f2b6f708506004b7edcf90545536c986e15b9f854b58f70e3d10880",
+      "sha256": "e35769c70f2b6f708506004b7edcf90545536c986e15b9f854b58f70e3d10880",
       "needed": [
         "ld-linux-aarch64.so.1",
         "libc.so.6",
@@ -409,8 +409,8 @@
     },
     {
       "path": "lib/libRapidCore.so",
-      "input_sha256": "94400c2ebb065afae8ae459de70e73f9ccac9e9f32b4cadb7c3cd72713c58113",
-      "sha256": "94400c2ebb065afae8ae459de70e73f9ccac9e9f32b4cadb7c3cd72713c58113",
+      "input_sha256": "e35769c70f2b6f708506004b7edcf90545536c986e15b9f854b58f70e3d10880",
+      "sha256": "e35769c70f2b6f708506004b7edcf90545536c986e15b9f854b58f70e3d10880",
       "needed": [
         "ld-linux-aarch64.so.1",
         "libc.so.6",
@@ -423,8 +423,8 @@
     },
     {
       "path": "lib/libRapidMedia.so",
-      "input_sha256": "751b60ec74d78e0c6a04cb6655e8b9ac745c9e8c13f99cf72739164018697f77",
-      "sha256": "088bc1ced51b202106a9f79695ab321819c0b867834a3a0272809e637f3fbea1",
+      "input_sha256": "b3e67c1665abbd7146054dfd76b4fd63155024cd326b93624daccd0ffad50684",
+      "sha256": "663ac9bc0bc51d2e19316a5d4d96472225914de4a862ec39e800071255ac5984",
       "needed": [
         "ld-linux-aarch64.so.1",
         "libRapidCore.so",
@@ -442,8 +442,8 @@
     },
     {
       "path": "lib/libRapidSDL.so",
-      "input_sha256": "1cb0f095db4f6853923402fe077a2b0c71893c2f3141dc6176def37dff03420c",
-      "sha256": "3eb5fb1e7ceaabcd6b0aa998832ec20f5fbcc0586a25f8630bcb36739d2f439c",
+      "input_sha256": "2d94f627baf7f10cef611e1a237388b1fd834a0589bf7db49bcb28b2dd3bd7f9",
+      "sha256": "778d9c76ea96a69016f6a96275ccb8e622aafd502b69f77d16ee9af389a0a59f",
       "needed": [
         "ld-linux-aarch64.so.1",
         "libRapidCore.so",
@@ -457,8 +457,8 @@
     },
     {
       "path": "media/lib/libRapidMedia.so",
-      "input_sha256": "751b60ec74d78e0c6a04cb6655e8b9ac745c9e8c13f99cf72739164018697f77",
-      "sha256": "088bc1ced51b202106a9f79695ab321819c0b867834a3a0272809e637f3fbea1",
+      "input_sha256": "b3e67c1665abbd7146054dfd76b4fd63155024cd326b93624daccd0ffad50684",
+      "sha256": "663ac9bc0bc51d2e19316a5d4d96472225914de4a862ec39e800071255ac5984",
       "needed": [
         "ld-linux-aarch64.so.1",
         "libRapidCore.so",
@@ -476,8 +476,8 @@
     },
     {
       "path": "sdl/lib/libRapidSDL.so",
-      "input_sha256": "1cb0f095db4f6853923402fe077a2b0c71893c2f3141dc6176def37dff03420c",
-      "sha256": "3eb5fb1e7ceaabcd6b0aa998832ec20f5fbcc0586a25f8630bcb36739d2f439c",
+      "input_sha256": "2d94f627baf7f10cef611e1a237388b1fd834a0589bf7db49bcb28b2dd3bd7f9",
+      "sha256": "778d9c76ea96a69016f6a96275ccb8e622aafd502b69f77d16ee9af389a0a59f",
       "needed": [
         "ld-linux-aarch64.so.1",
         "libRapidCore.so",
