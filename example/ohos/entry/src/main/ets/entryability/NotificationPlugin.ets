@@ -3,7 +3,6 @@ import { hilog } from '@kit.PerformanceAnalysisKit';
 
 import { AbilityAware, Any,
   FlutterPlugin,
-  Log,
   MethodCall,
   MethodChannel,
   AbilityPluginBinding,
@@ -14,7 +13,6 @@ import { FlutterPluginBinding } from '@ohos/flutter_ohos/src/main/ets/embedding/
 import { MethodResult } from '@ohos/flutter_ohos/src/main/ets/plugin/common/MethodChannel';
 import notificationManager from '@ohos.notificationManager';
 import Base from '@ohos.base';
-import UIAbility from '@ohos.app.ability.UIAbility'
 import { AbilityConstant } from '@kit.AbilityKit';
 import { Want } from '@kit.AbilityKit';
 import { EventSink } from '@ohos/flutter_ohos/src/main/ets/plugin/common/EventChannel';
@@ -115,32 +113,38 @@ export default class NotificationPlugin implements FlutterPlugin, AbilityAware {
     }
   }
 
-  requirePushServiceToken(result: MethodResult) {
-    pushService.getToken().then((token) => {
+  async requirePushServiceToken(result: MethodResult) {
+    try {
+      const token = await pushService.getToken();
+      if (token.trim().length === 0) {
+        result.error('PUSH_TOKEN_EMPTY', 'Push Kit returned an empty token', null);
+        return;
+      }
+      hilog.info(0x0000, TAG, 'Push token acquired');
       result.success(token);
-    }).catch((reason: Base.BusinessError) => {
-      result.success(reason.code + "," + reason.message);
-    })
+    } catch (error) {
+      const reason = error as Base.BusinessError;
+      hilog.error(0x0000, TAG, 'getToken failed, code=%{public}d', reason.code);
+      result.error(String(reason.code), reason.message, null);
+    }
   }
 
-  requestNotificationEnabled(result: MethodResult) {
-    result.success(null);
-    notificationManager.isNotificationEnabled().then((data: boolean) => {
-      console.info("isNotificationEnabled success, data: " + JSON.stringify(data));
-      if(!data){
-        notificationManager.requestEnableNotification().then(() => {
-          console.info(`[ANS] requestEnableNotification success`);
-        }).catch((err : Base.BusinessError) => {
-          if(1600004 == err.code){
-            console.info(`[ANS] requestEnableNotification refused`);
-          } else {
-            console.error(`[ANS] requestEnableNotification failed, code is ${err.code}, message is ${err.message}`);
-          }
-        });
+  async requestNotificationEnabled(result: MethodResult) {
+    try {
+      if (!await notificationManager.isNotificationEnabled()) {
+        const ability = this.abilityPluginBinding?.getAbility();
+        if (!ability) {
+          result.error('ABILITY_UNAVAILABLE', 'Notification permission requires a UIAbility', null);
+          return;
+        }
+        await notificationManager.requestEnableNotification(ability.context);
       }
-    }).catch((err : Base.BusinessError) => {
-      console.error(`isNotificationEnabled fail: ${JSON.stringify(err)}`);
-    });
+      result.success(null);
+    } catch (error) {
+      const reason = error as Base.BusinessError;
+      hilog.error(0x0000, TAG, 'Notification permission failed, code=%{public}d', reason.code);
+      result.error(String(reason.code), reason.message, null);
+    }
   }
 
   isNotificationEnabled(result: MethodResult) {
@@ -149,8 +153,7 @@ export default class NotificationPlugin implements FlutterPlugin, AbilityAware {
       result.success(data)
     }).catch((err : Base.BusinessError) => {
       console.error(`isNotificationEnabled fail: ${JSON.stringify(err)}`);
-      result.success(false)
+      result.error(String(err.code), err.message, null)
     });
   }
 }
-

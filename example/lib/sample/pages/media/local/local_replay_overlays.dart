@@ -3,11 +3,15 @@ part of '../../rapid_kit_sample_pages.dart';
 class LocalReplayBufferingOverlay extends StatelessWidget {
   final double width;
   final double height;
+  final String? message;
+  final bool timedOut;
 
   const LocalReplayBufferingOverlay({
     super.key,
     required this.width,
     required this.height,
+    this.message,
+    this.timedOut = false,
   });
 
   @override
@@ -15,9 +19,25 @@ class LocalReplayBufferingOverlay extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      color: Colors.black54,
+      color: Colors.transparent,
       child: Center(
-        child: createCenterLoading(size: 20, color: Colors.white),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (timedOut)
+              const Icon(Icons.error_outline, size: 24, color: Colors.white)
+            else
+              createCenterLoading(size: 20, color: Colors.white),
+            if (message != null) ...[
+              const SizedBox(height: 12),
+              Text(
+                message!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white, fontSize: 14),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }

@@ -11,7 +11,11 @@ class QRScannerPage extends StatefulWidget {
 
 class _QRScannerPageState extends State<QRScannerPage> {
   bool _isProcessing = false;
-  MobileScannerController cameraController = MobileScannerController();
+  final MobileScannerController cameraController = MobileScannerController(
+    formats: const [BarcodeFormat.qrCode],
+    cameraResolution: const Size(1920, 1080),
+    detectionSpeed: DetectionSpeed.noDuplicates,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +38,19 @@ class _QRScannerPageState extends State<QRScannerPage> {
         ),
         body: MobileScanner(
           controller: cameraController,
+          errorBuilder: (context, error, child) => ColoredBox(
+            color: Colors.black,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(
+                  '扫码器启动失败，请确认相机权限后重试。\n${error.errorCode.message}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ),
           onDetect: (capture) {
             if (_isProcessing) return;
 

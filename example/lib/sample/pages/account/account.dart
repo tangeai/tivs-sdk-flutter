@@ -13,12 +13,15 @@ class _AccountPageState extends LifecycleAwareState<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: const ValueKey('rapid-account-page-root'),
       appBar: AppBar(
         title: const Text('账户与设置',
-            style: TextStyle(color: SampleThemeConfigure.colorPrimary, fontSize: 16)),
+            style: TextStyle(
+                color: SampleThemeConfigure.colorPrimary, fontSize: 16)),
         backgroundColor: SampleThemeConfigure.colorBackground,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: SampleThemeConfigure.colorPrimary),
+          icon: const Icon(Icons.arrow_back,
+              color: SampleThemeConfigure.colorPrimary),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -35,9 +38,11 @@ class _AccountPageState extends LifecycleAwareState<AccountPage> {
   Widget buildSettingItem(
     String title,
     VoidCallback onTap, {
+    Key? key,
     Color textColor = SampleThemeConfigure.colorTextSub,
   }) {
     return ListTile(
+      key: key,
       title: Text(
         title,
         style: TextStyle(fontSize: 14.0, color: textColor),
@@ -46,7 +51,8 @@ class _AccountPageState extends LifecycleAwareState<AccountPage> {
         width: 40.0,
         child: Align(
           alignment: Alignment.centerRight,
-          child: Icon(Icons.arrow_forward_ios, size: 14, color: SampleThemeConfigure.colorTextHint),
+          child: Icon(Icons.arrow_forward_ios,
+              size: 14, color: SampleThemeConfigure.colorTextHint),
         ),
       ),
       onTap: onTap,
@@ -84,8 +90,13 @@ class _AccountPageState extends LifecycleAwareState<AccountPage> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         buildSettingItem("修改密码", _onChangePassword),
-        buildSettingItem("退出登录", _onLogout),
-        buildSettingItem("删除账号", _confirmDelete, textColor: const Color.fromRGBO(192, 51, 8, 1)),
+        buildSettingItem(
+          "退出登录",
+          _onLogout,
+          key: const ValueKey('rapid-account-logout-action'),
+        ),
+        buildSettingItem("删除账号", _confirmDelete,
+            textColor: const Color.fromRGBO(192, 51, 8, 1)),
       ],
     );
   }
@@ -147,7 +158,8 @@ class _AccountPageState extends LifecycleAwareState<AccountPage> {
 
   void _confirmLogout() async {
     PushNotificationCoordinator.instance.handleAuthenticationInvalidated();
-    await SharedPreferencesUtil.instance.setString(SampleConstants.storageKeyLoginToken, "");
+    await SharedPreferencesUtil.instance
+        .setString(SampleConstants.storageKeyLoginToken, "");
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => const LoginPage()),
       (Route<dynamic> route) => false,
@@ -175,8 +187,10 @@ class _AccountPageState extends LifecycleAwareState<AccountPage> {
     }
 
     PushNotificationCoordinator.instance.handleAuthenticationInvalidated();
-    await SharedPreferencesUtil.instance.setString(SampleConstants.storageKeyLoginAccount, "");
-    await SharedPreferencesUtil.instance.setString(SampleConstants.storageKeyLoginToken, "");
+    await SharedPreferencesUtil.instance
+        .setString(SampleConstants.storageKeyLoginAccount, "");
+    await SharedPreferencesUtil.instance
+        .setString(SampleConstants.storageKeyLoginToken, "");
 
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => const LoginPage()),
@@ -226,7 +240,8 @@ class _AccountPageState extends LifecycleAwareState<AccountPage> {
                   return;
                 }
 
-                final ret = await AccountService.changePassword(oldPassword, newPassword);
+                final ret = await AccountService.changePassword(
+                    oldPassword, newPassword);
 
                 if (!mounted) {
                   return;

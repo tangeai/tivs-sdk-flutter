@@ -898,6 +898,8 @@ class _InstructStandardWidgetState extends State<InstructStandardWidget>
     _instructOptions.add(InstructOption(
         "警戒语音-自定义-查询音频规格与当前铃声", () => _onInstructQueryRongtoneSpec()));
     _instructOptions.add(InstructOption(
+        "警戒语音-更新音频（Demo WAV）", () => _onInstructUploadDemoTone()));
+    _instructOptions.add(InstructOption(
         "警戒语音-自定义-设置为铃声-1", () => _onInstructQueryRongtoneUpdate(0)));
     _instructOptions.add(InstructOption(
         "警戒语音-自定义-设置为铃声-2", () => _onInstructQueryRongtoneUpdate(1)));
@@ -1310,6 +1312,21 @@ class _InstructStandardWidgetState extends State<InstructStandardWidget>
     }
   }
 
+  Future<void> _onInstructUploadDemoTone() async {
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlarmToneDemoDialog(
+        onUpload: (packet) async {
+          if (!mounted || !_pipe.isEstablished) {
+            return Ret.error(1, "连接未建立，请重新连接设备后再试");
+          }
+          return InstructStandard.setAlarmRingtone(_pipe, packet);
+        },
+      ),
+    );
+  }
+
   void _onInstructQueryRongtoneUpdate(int index) async {
     final content = await onlineRingtone(_ringtones[index]);
     if (content.isEmpty) {
@@ -1343,12 +1360,12 @@ class _InstructStandardWidgetState extends State<InstructStandardWidget>
     if (resp.success) {
       _showResult(
         "查询成功",
-        "当前的铃声ID: ${resp.data?.id}\\n\\n"
-            "规格-音频采样率: ${resp.data?.sampleRate}\\n"
-            "规格-通道数: ${resp.data?.channels}\\n"
-            "规格-音频位深: ${resp.data?.bitDepth}\\n"
-            "规格-大小限制（KB，0-表示未知）: ${resp.data?.limit}\\n"
-            "规格-文件格式: ${resp.data?.format}\\n"
+        "当前的铃声ID: ${resp.data?.id}\n\n"
+            "规格-音频采样率: ${resp.data?.sampleRate}\n"
+            "规格-通道数: ${resp.data?.channels}\n"
+            "规格-音频位深: ${resp.data?.bitDepth}\n"
+            "规格-大小限制（KB，0-表示未知）: ${resp.data?.limit}\n"
+            "规格-文件格式: ${resp.data?.format}\n"
             "规格-音频编码: ${resp.data?.codec}",
       );
     } else {

@@ -119,7 +119,7 @@ export default class PreferencesPlugin implements FlutterPlugin, AbilityAware {
             that.preferences?.flush()
             Log.i(
               TAG,
-              "[putPreferencesString] " + key + " -> " + value);
+              "[putPreferencesString] " + key + " -> <redacted:length=" + value.length + ">");
 
 
             result.success(null)
@@ -136,7 +136,7 @@ export default class PreferencesPlugin implements FlutterPlugin, AbilityAware {
 
             Log.i(
               TAG,
-              "[getPreferencesString] " + key + " -> " + value);
+              "[getPreferencesString] " + key + " -> <redacted:length=" + value.length + ">");
 
             break;
           }
@@ -176,4 +176,3 @@ export default class PreferencesPlugin implements FlutterPlugin, AbilityAware {
 
   }
 }
-

@@ -10,8 +10,11 @@ import '../widgets/rapid_kit_sample_widget.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../channel/rapid_kit_sample_channel.dart';
 import '../push/push_notification_coordinator.dart';
+import '../channel/push_registration.dart' as harmony_push;
 import '../utils/rapid_kit_sample_util.dart';
-import 'media/live_stream_lan_start_policy.dart';
+import 'media/live_stream_start_policy.dart';
+import 'media/cloud_replay_time_zone.dart';
+export 'media/cloud_replay_time_zone.dart';
 import '../../../configure.dart';
 import 'package:rapid_kit/rapid_kit.dart';
 // ignore: implementation_imports
@@ -20,13 +23,12 @@ import 'package:flutter/services.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:timeline_tile/timeline_tile.dart';
-import 'package:timezone/data/latest.dart' as tz_data;
-import 'package:timezone/timezone.dart' as tz;
 import 'package:http/http.dart' as http;
 import '../components/qr_scanner_page.dart';
 import '../utils/system_ui.dart';
 import 'setting/primary_channel_capability.dart';
 import 'connection.dart';
+import 'setting/alarm_tone_demo_dialog.dart';
 
 part 'lan/lan_discovery.dart';
 part 'lan/lan_preview.dart';

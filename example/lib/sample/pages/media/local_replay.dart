@@ -18,23 +18,28 @@ class LocalReplayPage extends StatefulWidget {
 }
 
 class _LocalReplayPageState extends LifecycleAwareState<LocalReplayPage> {
-  bool _active = false;
+  late final LocalReplayPlaybackController _playbackController;
 
-  void _setActive(bool active) {
-    if (_active == active) {
-      return;
-    }
-    setState(() => _active = active);
+  @override
+  void initState() {
+    super.initState();
+    _playbackController = LocalReplayPlaybackController();
+  }
+
+  @override
+  void dispose() {
+    _playbackController.dispose();
+    super.dispose();
   }
 
   @override
   void start() {
-    _setActive(true);
+    _playbackController.start();
   }
 
   @override
   void stop() {
-    _setActive(false);
+    _playbackController.stop();
   }
 
   @override
@@ -58,7 +63,7 @@ class _LocalReplayPageState extends LifecycleAwareState<LocalReplayPage> {
         deviceName: widget.deviceName,
         cameraCount: widget.cameraCount,
         deviceAbilities: widget.deviceAbilities,
-        active: _active,
+        playbackController: _playbackController,
       ),
     );
   }

@@ -224,6 +224,7 @@ class _LoginPageState extends LifecycleAwareState<LoginPage> {
 
   Widget _buildLoginButton() {
     return ElevatedButton(
+      key: const ValueKey('rapid-login-submit-action'),
       onPressed: _onLogin,
       style: ElevatedButton.styleFrom(
         backgroundColor: SampleThemeConfigure.colorPrimary,
@@ -319,6 +320,7 @@ class _LoginPageState extends LifecycleAwareState<LoginPage> {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 400.0),
       child: TextField(
+        key: const ValueKey('rapid-login-account-field'),
         style: _buildTextStyle(),
         controller: _accountController,
         decoration: _buildInputDecoration("手机号或邮箱"),
@@ -331,6 +333,7 @@ class _LoginPageState extends LifecycleAwareState<LoginPage> {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 400.0),
       child: TextField(
+        key: const ValueKey('rapid-login-password-field'),
         style: _buildTextStyle(),
         controller: _passwordController,
         decoration: _buildInputDecoration("密码"),
@@ -389,65 +392,104 @@ class _LoginPageState extends LifecycleAwareState<LoginPage> {
   }
 
   Positioned _buildDebugButton() {
-    final bool isMobile = Platform.isAndroid || Platform.isIOS;
-    final IconData iconData =
-        isMobile ? Icons.qr_code_rounded : Icons.content_paste_rounded;
-    final String buttonText = isMobile ? '扫描调试二维码' : '识别剪贴板的调试二维码';
-
+    final bool supportsScanner =
+        Platform.isAndroid || Platform.isIOS || PlatformUtil.ohos();
+    final bool showsClipboardFallback = PlatformUtil.ohos() || !supportsScanner;
     return Positioned(
       bottom: 32,
       left: 0,
       right: 0,
       child: Center(
-        child: GestureDetector(
-          key: const ValueKey('rapid-login-debugging-code-action'),
-          onTap: () async => _onAcceptDebuggingCode(context),
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: SampleThemeConfigure.colorTextSub,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.all(8),
-                child: Icon(iconData, color: Colors.white, size: 30),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (supportsScanner)
+              _buildDebuggingCodeAction(
+                key: const ValueKey('rapid-login-debugging-code-action'),
+                icon: Icons.qr_code_scanner_rounded,
+                label: '扫描调试二维码',
+                onTap: () => _onScanDebuggingCode(context),
               ),
-              const SizedBox(height: 6),
-              Text(
-                buttonText,
-                style: const TextStyle(
-                    color: SampleThemeConfigure.colorTextSub, fontSize: 10),
+            if (supportsScanner && showsClipboardFallback)
+              const SizedBox(width: 36),
+            if (showsClipboardFallback)
+              _buildDebuggingCodeAction(
+                key: const ValueKey(
+                    'rapid-login-debugging-code-clipboard-action'),
+                icon: Icons.content_paste_rounded,
+                label: '识别剪贴板',
+                onTap: () => _onReadClipboardDebuggingCode(context),
               ),
-            ],
-          ),
+          ],
         ),
       ),
     );
   }
 
-  void _onAcceptDebuggingCode(BuildContext context) async {
-    final bool isMobile = Platform.isAndroid || Platform.isIOS;
-    String? resultText;
+  Widget _buildDebuggingCodeAction({
+    required Key key,
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      key: key,
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: SampleThemeConfigure.colorTextSub,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Icon(icon, color: Colors.white, size: 30),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              label,
+              style: const TextStyle(
+                color: SampleThemeConfigure.colorTextSub,
+                fontSize: 10,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-    if (isMobile) {
-      resultText = await _readMobileDebuggingCode(context);
-      if (!context.mounted || resultText == null) return;
-    } else {
-      ClipboardData? clipboardData = await Clipboard.getData('text/plain');
-      if (!context.mounted) return;
-      resultText = clipboardData?.text ?? '';
-      if (resultText.isEmpty) {
-        SnackTips.show(context, '剪切板为空');
-        return;
-      }
+  Future<void> _onScanDebuggingCode(BuildContext context) async {
+    final resultText = await _readMobileDebuggingCode(context);
+    if (!context.mounted || resultText == null) return;
+    await _applyDebuggingCode(resultText, persist: true);
+  }
+
+  Future<void> _onReadClipboardDebuggingCode(BuildContext context) async {
+    final clipboardData = await Clipboard.getData('text/plain');
+    if (!context.mounted) return;
+    final resultText = clipboardData?.text ?? '';
+    if (resultText.isEmpty) {
+      SnackTips.show(context, '剪切板为空');
+      return;
     }
+    await _applyDebuggingCode(resultText, persist: PlatformUtil.ohos());
+  }
 
+  Future<void> _applyDebuggingCode(
+    String resultText, {
+    required bool persist,
+  }) async {
     final ret = Assistant.applyDebuggingCode(resultText);
     if (!ret) {
       SnackTips.show(context, '无效的调试码，通常是用户令牌过期，请重新获取。');
     } else {
       PushNotificationCoordinator.instance.handleAuthenticationSucceeded();
-      if (isMobile) {
+      if (persist) {
         await SharedPreferencesUtil.instance.setString(
           SampleConstants.storageKeyLoginDebuggingCode,
           resultText,
@@ -479,7 +521,8 @@ class _LoginPageState extends LifecycleAwareState<LoginPage> {
     }
 
     PushNotificationCoordinator.instance.handleAuthenticationSucceeded();
-    final bool isMobile = Platform.isAndroid || Platform.isIOS;
+    final bool isMobile =
+        Platform.isAndroid || Platform.isIOS || PlatformUtil.ohos();
     if (isMobile) {
       await SharedPreferencesUtil.instance.setString(
         SampleConstants.storageKeyLoginDebuggingCode,
@@ -501,9 +544,21 @@ class _LoginPageState extends LifecycleAwareState<LoginPage> {
       if (useLast) return lastDebuggingCode;
     }
 
-    final resultText = await Navigator.of(context).push<String>(
-      MaterialPageRoute(builder: (context) => const QRScannerPage()),
-    );
+    String? resultText;
+    try {
+      if (PlatformUtil.ohos()) {
+        resultText = await HarmonyQrScannerChannel.scan();
+      } else {
+        resultText = await Navigator.of(context).push<String>(
+          MaterialPageRoute(builder: (context) => const QRScannerPage()),
+        );
+      }
+    } on PlatformException catch (error) {
+      if (context.mounted) {
+        SnackTips.show(context, '扫码失败：${error.message ?? error.code}');
+      }
+      return null;
+    }
     if (!context.mounted) return null;
     if (resultText == null || resultText.isEmpty) {
       SnackTips.show(context, '扫描取消或无效');

@@ -222,14 +222,18 @@ Widget buildLivePlayersLayout(
   final count = playerWidgets.length;
   final isLandscape = size.width > size.height;
   final useLandscapeLayout = isFullScreen && isLandscape && count > 1;
-  final mode = count == 1
-      ? (isFullScreen ? 'single_fullscreen' : 'single_inline')
-      : useLandscapeLayout
-          ? (count == 2 ? 'landscape_split' : 'landscape_focus')
-          : 'vertical_stack';
+  final mode = count == 4
+      ? 'four_grid'
+      : count == 1
+          ? (isFullScreen ? 'single_fullscreen' : 'single_inline')
+          : useLandscapeLayout
+              ? (count == 2 ? 'landscape_split' : 'landscape_focus')
+              : 'vertical_stack';
 
   Widget child;
-  if (count == 1) {
+  if (count == 4) {
+    child = buildFourCameraGrid(playerWidgets);
+  } else if (count == 1) {
     child = _buildSingleLivePlayer(playerWidgets.first, isFullScreen, size);
   } else if (useLandscapeLayout && count == 2) {
     child = _buildLandscapeSplitPlayers(playerWidgets);
@@ -275,6 +279,92 @@ Widget _buildLandscapeSplitPlayers(List<Widget> playerWidgets) {
       Expanded(child: _buildLivePlayerSlot(playerWidgets[1])),
     ],
   );
+}
+
+/// Keeps every lens visible in portrait and landscape without scrolling.
+Widget buildFourCameraGrid(List<Widget> playerWidgets) {
+  assert(playerWidgets.length == 4);
+  const spacing = 8.0;
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      final width = math.min(
+        constraints.maxWidth,
+        math.max(0.0, (constraints.maxHeight - spacing) * 16 / 9 + spacing),
+      );
+      return Center(
+        child: SizedBox(
+          width: width,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (int row = 0; row < 2; row++) ...[
+                if (row > 0) const SizedBox(height: spacing),
+                Row(
+                  children: [
+                    for (int column = 0; column < 2; column++) ...[
+                      if (column > 0) const SizedBox(width: spacing),
+                      Expanded(
+                        child: AspectRatio(
+                          aspectRatio: 16 / 9,
+                          child: _buildLivePlayerSlot(
+                              playerWidgets[row * 2 + column]),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+class FourCameraLiveFrame extends StatelessWidget {
+  final Widget players;
+  final Widget diagnostics;
+  final Widget tools;
+  final Widget controls;
+  final bool isFullScreen;
+
+  const FourCameraLiveFrame({
+    super.key,
+    required this.players,
+    required this.diagnostics,
+    required this.tools,
+    required this.controls,
+    required this.isFullScreen,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (isFullScreen) {
+      return SafeArea(
+        child: Row(
+          children: [
+            Expanded(child: players),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: controls,
+            ),
+          ],
+        ),
+      );
+    }
+    return Column(
+      children: [
+        Padding(padding: const EdgeInsets.all(16), child: diagnostics),
+        Expanded(child: players),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+          child: tools,
+        ),
+        controls,
+      ],
+    );
+  }
 }
 
 Widget _buildLandscapeFocusPlayers(List<Widget> playerWidgets) {

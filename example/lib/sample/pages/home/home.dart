@@ -1,10 +1,7 @@
 part of '../rapid_kit_sample_pages.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({
-    super.key,
-    this.initialTargetDeviceId,
-  });
+  const HomePage({super.key, this.initialTargetDeviceId});
 
   final String? initialTargetDeviceId;
 
@@ -26,6 +23,7 @@ class _HomePageState extends LifecycleAwareState<HomePage> {
   bool _initialTargetOpened = false;
   bool _notificationPermissionChecked = false;
   int _loadGeneration = 0;
+  harmony_push.PushRegistration? _pushRegistration;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +49,7 @@ class _HomePageState extends LifecycleAwareState<HomePage> {
     });
     _loadData(++_loadGeneration);
     _pushServiceBinding();
+    unawaited(_requestNotificationPermission());
     _handleNotificationClick();
     if (enablePersistentChannel) _initializePersistentChannel();
     CallObserver.addIncomingListener(_onIncomingCall);
@@ -60,6 +59,7 @@ class _HomePageState extends LifecycleAwareState<HomePage> {
   @override
   void start() {
     super.start();
+    _pushRegistration?.ensureRegistered();
 
     FocusManager.instance.primaryFocus?.unfocus();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
@@ -108,6 +108,7 @@ class _HomePageState extends LifecycleAwareState<HomePage> {
 
   void _performLogout() async {
     PushNotificationCoordinator.instance.handleAuthenticationInvalidated();
+    _pushRegistration?.dispose();
     await SharedPreferencesUtil.instance
         .setString(SampleConstants.storageKeyLoginToken, "");
     PersistentChannel.disconnect();
@@ -203,6 +204,7 @@ class _HomePageState extends LifecycleAwareState<HomePage> {
 
   @override
   void dispose() {
+    _pushRegistration?.dispose();
     NotificationChannel.stopListening();
 
     if (enablePersistentChannel) {
@@ -218,16 +220,50 @@ class _HomePageState extends LifecycleAwareState<HomePage> {
     super.dispose();
   }
 
-  void _pushServiceBinding() async {
+  void _pushServiceBinding() {
     // Notice: we only provide sample on OpenHarmonyOS.
     if (!PlatformUtil.ohos()) {
       return;
     }
-    final token = await NotificationChannel.getPushServiceToken();
-    final ret =
-        await PushNotificationService.associate(token, PushChannel.harmony);
-    if (!ret.success) {
-      SnackTips.show(context, "Notice: Push service binding failed");
+    _pushRegistration = harmony_push.PushRegistration(
+      getToken: NotificationChannel.getPushServiceToken,
+      associate: (token) async {
+        final ret =
+            await PushNotificationService.associate(token, PushChannel.harmony);
+        if (!ret.success) {
+          throw PlatformException(code: '${ret.code ?? 'ASSOCIATE_FAILED'}');
+        }
+      },
+      log: (message) => Logging.i('PushRegistration', message),
+      onFailure: (stage, code) {
+        if (!mounted) return;
+        SnackTips.show(context, '推送注册失败（$stage / $code），返回首页后重试');
+      },
+    )..ensureRegistered();
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    if (!PlatformUtil.ohos()) return;
+    try {
+      final enabled = await NotificationChannel.isNotificationEnabled();
+      if (!mounted) return;
+      if (!enabled) {
+        await NotificationChannel.requestNotificationEnabled();
+      }
+      final authorized = await NotificationChannel.isNotificationEnabled();
+      Logging.i('PushRegistration', 'stage=permission enabled=$authorized');
+      if (mounted && !authorized) {
+        SnackTips.show(context, '通知权限未开启，请在系统设置中允许通知');
+      }
+    } on PlatformException catch (error) {
+      Logging.e(
+          'PushRegistration', 'stage=permission failed code=${error.code}');
+      if (mounted) {
+        SnackTips.show(context, '通知授权未完成（${error.code}），请检查系统通知设置');
+      }
+    } catch (error) {
+      Logging.e('PushRegistration',
+          'stage=permission failed type=${error.runtimeType}');
     }
   }
 
@@ -331,7 +367,7 @@ class _HomePageState extends LifecycleAwareState<HomePage> {
   }
 
   Future<void> _requestNotificationPermissionOnce() async {
-    if (_notificationPermissionChecked) return;
+    if (PlatformUtil.ohos() || _notificationPermissionChecked) return;
     _notificationPermissionChecked = true;
     final enabled = await NotificationChannel.isNotificationEnabled();
     if (!enabled) await NotificationChannel.requestNotificationEnabled();

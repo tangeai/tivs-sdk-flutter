@@ -74,145 +74,18 @@ class CloudReplayDownloadButton extends StatelessWidget {
   }
 }
 
-class _CloudReplaySliderThumbShape extends SliderComponentShape {
-  static const double _width = 36;
-  static const double _height = 24;
-
-  const _CloudReplaySliderThumbShape();
-
-  @override
-  Size getPreferredSize(bool isEnabled, bool isDiscrete) =>
-      const Size(_width, _height);
-
-  @override
-  void paint(
-    PaintingContext context,
-    Offset center, {
-    required Animation<double> activationAnimation,
-    required Animation<double> enableAnimation,
-    required bool isDiscrete,
-    required TextPainter labelPainter,
-    required RenderBox parentBox,
-    required SliderThemeData sliderTheme,
-    required TextDirection textDirection,
-    required double value,
-    required double textScaleFactor,
-    required Size sizeWithOverflow,
-  }) {
-    final rect = Rect.fromCenter(
-      center: center,
-      width: _width,
-      height: _height,
-    );
-    final shape = RRect.fromRectAndRadius(
-      rect,
-      const Radius.circular(_height / 2),
-    );
-    final path = Path()..addRRect(shape);
-    context.canvas.drawShadow(path, Colors.black45, 4, true);
-    context.canvas.drawRRect(
-      shape,
-      Paint()..color = sliderTheme.thumbColor ?? Colors.white,
-    );
-  }
-}
-
-class _CloudReplaySliderTrackShape extends SliderTrackShape {
-  const _CloudReplaySliderTrackShape();
-
-  @override
-  bool get isRounded => true;
-
-  @override
-  Rect getPreferredRect({
-    required RenderBox parentBox,
-    Offset offset = Offset.zero,
-    required SliderThemeData sliderTheme,
-    bool isEnabled = false,
-    bool isDiscrete = false,
-  }) {
-    final height = sliderTheme.trackHeight ?? 0;
-    return Rect.fromLTWH(
-      offset.dx,
-      offset.dy + (parentBox.size.height - height) / 2,
-      parentBox.size.width,
-      height,
-    );
-  }
-
-  @override
-  void paint(
-    PaintingContext context,
-    Offset offset, {
-    required RenderBox parentBox,
-    required SliderThemeData sliderTheme,
-    required Animation<double> enableAnimation,
-    required TextDirection textDirection,
-    required Offset thumbCenter,
-    Offset? secondaryOffset,
-    bool isDiscrete = false,
-    bool isEnabled = false,
-  }) {
-    final trackRect = getPreferredRect(
-      parentBox: parentBox,
-      offset: offset,
-      sliderTheme: sliderTheme,
-      isEnabled: isEnabled,
-      isDiscrete: isDiscrete,
-    );
-    if (trackRect.height <= 0) return;
-    final paintedTrackRect = Rect.fromLTWH(
-      offset.dx,
-      trackRect.top,
-      parentBox.size.width,
-      trackRect.height,
-    );
-
-    final activeColor = ColorTween(
-      begin: sliderTheme.disabledActiveTrackColor,
-      end: sliderTheme.activeTrackColor,
-    ).evaluate(enableAnimation)!;
-    final inactiveColor = ColorTween(
-      begin: sliderTheme.disabledInactiveTrackColor,
-      end: sliderTheme.inactiveTrackColor,
-    ).evaluate(enableAnimation)!;
-    final inactivePaint = Paint()
-      ..color = inactiveColor
-      ..strokeWidth = trackRect.height
-      ..strokeCap = StrokeCap.round;
-    final activePaint = Paint()
-      ..color = activeColor
-      ..strokeWidth = trackRect.height
-      ..strokeCap = StrokeCap.round;
-
-    context.canvas.drawLine(
-      paintedTrackRect.centerLeft,
-      paintedTrackRect.centerRight,
-      inactivePaint,
-    );
-    context.canvas.drawLine(
-      textDirection == TextDirection.ltr
-          ? paintedTrackRect.centerLeft
-          : paintedTrackRect.centerRight,
-      thumbCenter,
-      activePaint,
-    );
-  }
-}
-
 class CloudReplayPage extends StatefulWidget {
   final String deviceId;
   final String deviceName;
   final int cameraCount;
   final Timezone? deviceTimezone;
 
-  const CloudReplayPage({
-    super.key,
-    required this.deviceId,
-    required this.deviceName,
-    required this.cameraCount,
-    this.deviceTimezone,
-  });
+  const CloudReplayPage(
+      {super.key,
+      required this.deviceId,
+      required this.deviceName,
+      required this.cameraCount,
+      this.deviceTimezone});
 
   @override
   State<CloudReplayPage> createState() => _CloudReplayPageState();
@@ -221,6 +94,7 @@ class CloudReplayPage extends StatefulWidget {
 class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
     with WidgetsBindingObserver {
   static const String _tag = "_CloudReplayPage_";
+  static const int _completionTimestampToleranceMs = 2000;
   static const TextStyle _timestampLabelStyle = TextStyle(
     color: Colors.white,
     fontSize: 12,
@@ -229,7 +103,7 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
 
   double _measureTimestampLabelWidth(BuildContext context) {
     final painter = TextPainter(
-      text: const TextSpan(text: "00:00:00", style: _timestampLabelStyle),
+      text: const TextSpan(text: '00:00:00', style: _timestampLabelStyle),
       textDirection: Directionality.of(context),
       textScaler: MediaQuery.textScalerOf(context),
       maxLines: 1,
@@ -251,6 +125,7 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
 
   Player? _player1;
   Player? _player2;
+  Player? _player3;
 
   late CloudReplayStream _streamOfDownload;
   late List<CloudReplayCapture> _downloadCaptures;
@@ -264,21 +139,23 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
   int _currentPartStartTimestampInMs = 0;
   int _currentPartEndTimestampInMs = 0;
   int _currentTimestampInMs = 0;
-  bool _recordClicked = false;
-  bool _seekDragging = false;
-  int _seekPosition = 0;
   final CloudReplayTimelineState _playbackTimeline = CloudReplayTimelineState();
   int? _pendingPtsInMs;
   int? _lastAcceptedPtsInMs;
   int? _lastAcceptedUtsInMs;
+  bool _recordClicked = false;
+  bool _seekDragging = false;
+  int _seekPosition = 0;
 
   CloudRecordIndexPacket? _recordIndexPacket;
 
   CloudReplaySpeed _speed = CloudReplaySpeed.x1;
 
-  DateTime _selectedDate = DateTime.now();
-  DateTime _todayDate = DateTime.now();
-  CloudReplayDeviceTimeZone _deviceTimeZone = CloudReplayDeviceTimeZone.local();
+  late DateTime _selectedDate;
+  late CloudReplayTimeZone _deviceTimeZone;
+  String? _deviceTimeRaw;
+  int _dateSelectionGeneration = 0;
+  int _recordIndexRequestGeneration = 0;
 
   RenderState _currentRenderState = RenderState.buffering;
 
@@ -286,24 +163,20 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "云录像",
-          style: TextStyle(
-            color: SampleThemeConfigure.colorPrimary,
-            fontSize: 18,
-          ),
-        ),
+        title: const Text("云录像",
+            style: TextStyle(
+                color: SampleThemeConfigure.colorPrimary, fontSize: 18)),
         backgroundColor: SampleThemeConfigure.colorBackground,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: SampleThemeConfigure.colorPrimary,
-          ),
+          icon: const Icon(Icons.arrow_back,
+              color: SampleThemeConfigure.colorPrimary),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        actions: [_datePicker()],
+        actions: [
+          _datePicker(),
+        ],
       ),
       body: _root(),
     );
@@ -375,8 +248,7 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
                 SizedBox(
                   width: timestampLabelWidth,
                   child: Text(
-                    _deviceTimeZone
-                        .formatTimeMilliseconds(_currentTimestampInMs),
+                    _deviceTimeZone.formatTimestamp(_currentTimestampInMs),
                     style: _timestampLabelStyle,
                     textAlign: TextAlign.right,
                     maxLines: 1,
@@ -419,7 +291,7 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
                   width: timestampLabelWidth,
                   child: Text(
                     _deviceTimeZone
-                        .formatTimeMilliseconds(_currentPartEndTimestampInMs),
+                        .formatTimestamp(_currentPartEndTimestampInMs),
                     style: _timestampLabelStyle,
                     textAlign: TextAlign.left,
                     maxLines: 1,
@@ -451,29 +323,38 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
     if (_seekDragging) {
       final seekTimestamp =
           ((_currentPartStartTimestampInMs + _seekPosition) / 1000).ceil();
+
+      // Stop the old playback before installing callbacks for the new seek.
+      // Otherwise a late frame emitted by stop() can become the new baseline.
+      _player.stop();
+      _player1?.stop();
+      _player2?.stop();
+      _player3?.stop();
+
       final generation = _playbackTimeline.begin(
         startTimestampInMs: _currentPartStartTimestampInMs,
         endTimestampInMs: _currentPartEndTimestampInMs,
         minimumTimestampInMs: seekTimestamp * 1000,
       );
-      _currentTimestampInMs = seekTimestamp * 1000;
-      Logging.i(_tag,
-          '[playback_seek] generation=$generation, target_uts_ms=${seekTimestamp * 1000}');
-
-      _player.stop();
-      _player1?.stop();
-      _player2?.stop();
+      _bindPlaybackTimeline(generation);
+      setState(() {
+        _currentTimestampInMs = seekTimestamp * 1000;
+        _currentRenderState = RenderState.buffering;
+        _seekDragging = false;
+      });
+      Logging.i(
+          _tag,
+          '[playback_seek] generation=$generation, '
+          'target_uts_ms=${seekTimestamp * 1000}');
 
       _stream.seek(seekTimestamp);
-      _bindPlaybackTimeline(generation);
-
       _player.start();
       _player1?.start();
       _player2?.start();
+      _player3?.start();
+      return;
     }
-    if (mounted) {
-      setState(() => _seekDragging = false);
-    }
+    _seekDragging = false;
   }
 
   String _formatTime(int milliseconds) {
@@ -520,33 +401,57 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
     );
   }
 
-  IconButton _speedControl() {
-    return IconButton(
-      icon: const Icon(
-        Icons.speed_rounded,
-        size: 25,
-        color: SampleThemeConfigure.colorTextPrimary,
-      ),
-      onPressed: () {
-        _speed = _speed == CloudReplaySpeed.x1
-            ? CloudReplaySpeed.x4
-            : CloudReplaySpeed.x1;
-        _stream.setSpeed(_speed);
+  Widget _speedControl() {
+    final speedLabel = '${_speed.name.substring(1)}×';
+    final speedActive = _speed != CloudReplaySpeed.x1;
 
-        SnackTips.show(context, "速度切换为${_speed.name}");
-      },
+    return Tooltip(
+      message: '当前播放速度：$speedLabel',
+      child: OutlinedButton.icon(
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(72, 40),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          foregroundColor: speedActive
+              ? SampleThemeConfigure.colorPrimary
+              : SampleThemeConfigure.colorTextPrimary,
+          backgroundColor: speedActive
+              ? SampleThemeConfigure.colorPrimary.withOpacity(0.12)
+              : Colors.transparent,
+          side: BorderSide(
+            color: speedActive
+                ? SampleThemeConfigure.colorPrimary
+                : SampleThemeConfigure.colorTextPrimary.withOpacity(0.35),
+          ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+        icon: const Icon(Icons.speed_rounded, size: 21),
+        label: Text(
+          speedLabel,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+        ),
+        onPressed: () {
+          setState(() {
+            _speed = _speed == CloudReplaySpeed.x1
+                ? CloudReplaySpeed.x4
+                : CloudReplaySpeed.x1;
+          });
+          _stream.setSpeed(_speed);
+
+          SnackTips.show(context, "速度切换为${_speed.name}");
+        },
+      ),
     );
   }
 
   IconButton _pauseControl() {
     return IconButton(
       icon: Icon(
-        _currentRenderState == RenderState.paused
-            ? Icons.play_circle_filled_rounded
-            : Icons.pause_circle_filled_outlined,
-        size: 25,
-        color: SampleThemeConfigure.colorTextPrimary,
-      ),
+          _currentRenderState == RenderState.paused
+              ? Icons.play_circle_filled_rounded
+              : Icons.pause_circle_filled_outlined,
+          size: 25,
+          color: SampleThemeConfigure.colorTextPrimary),
       onPressed: () {
         if (_currentRenderState == RenderState.paused) {
           _stream.resume();
@@ -554,6 +459,7 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
 
           _player1?.resume();
           _player2?.resume();
+          _player3?.resume();
 
           SnackTips.show(context, "已恢复播放");
         } else {
@@ -562,6 +468,7 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
 
           _player1?.pause();
           _player2?.pause();
+          _player3?.pause();
 
           SnackTips.show(context, "已暂停播放");
         }
@@ -572,11 +479,8 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
 
   IconButton _screenshot() {
     return IconButton(
-      icon: const Icon(
-        Icons.camera_alt,
-        size: 25,
-        color: SampleThemeConfigure.colorTextPrimary,
-      ),
+      icon: const Icon(Icons.camera_alt,
+          size: 25, color: SampleThemeConfigure.colorTextPrimary),
       onPressed: () {},
     );
   }
@@ -584,10 +488,9 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
   IconButton _muteControl() {
     return IconButton(
       icon: Icon(
-        _audioMuted ? Icons.volume_off_rounded : Icons.volume_up_rounded,
-        size: 25,
-        color: SampleThemeConfigure.colorTextPrimary,
-      ),
+          _audioMuted ? Icons.volume_off_rounded : Icons.volume_up_rounded,
+          size: 25,
+          color: SampleThemeConfigure.colorTextPrimary),
       onPressed: () => _onVolumeTap(),
     );
   }
@@ -601,6 +504,7 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
 
     _player1?.mute(_player.isMute());
     _player2?.mute(_player.isMute());
+    _player3?.mute(_player.isMute());
 
     setState(() {
       _audioMuted = _player.isMute();
@@ -642,7 +546,7 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
             ),
           if (_seekDragging) //
             Text(
-              "松手以播放 ${_deviceTimeZone.formatTimeMilliseconds(_currentPartStartTimestampInMs + _seekPosition)}",
+              "松手以播放 ${_deviceTimeZone.formatTimestamp(_currentPartStartTimestampInMs + _seekPosition)}",
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16, // 可根据需要调整字体大小
@@ -654,7 +558,13 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
   }
 
   Widget _bottom() {
-    return Column(children: <Widget>[Expanded(child: _listContainer())]);
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: _listContainer(),
+        ),
+      ],
+    );
   }
 
   Container _categoriesBar() {
@@ -663,7 +573,9 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[_datePicker()],
+        children: <Widget>[
+          _datePicker(),
+        ],
       ),
     );
   }
@@ -685,9 +597,7 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
             Text(
               _formattedDateString(),
               style: const TextStyle(
-                fontSize: 14.0,
-                color: SampleThemeConfigure.colorPrimary,
-              ),
+                  fontSize: 14.0, color: SampleThemeConfigure.colorPrimary),
             ),
           ],
         ),
@@ -698,30 +608,37 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
   String _formattedDateString() {
     String formattedDate = _selectedDate.toChineseDate();
 
-    if (_todayDate.year == _selectedDate.year &&
-        _todayDate.month == _selectedDate.month &&
-        _todayDate.day == _selectedDate.day) {
+    final today = _deviceTimeZone.now();
+    if (today.year == _selectedDate.year &&
+        today.month == _selectedDate.month &&
+        today.day == _selectedDate.day) {
       formattedDate = "$formattedDate | 今天";
     }
     return formattedDate;
   }
 
   void _onPickDate() async {
-    DateTime? pickedDate = await showDatePicker(
+    final pickedDate = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
 
-    if (pickedDate != null && pickedDate != _selectedDate) {
-      setState(() {
-        _selectedDate = pickedDate;
-        _eventsLoading = true;
-      });
+    if (pickedDate == null ||
+        (pickedDate.year == _selectedDate.year &&
+            pickedDate.month == _selectedDate.month &&
+            pickedDate.day == _selectedDate.day)) {
+      return;
     }
 
-    _loadRecordIndex();
+    _dateSelectionGeneration += 1;
+    setState(() {
+      _selectedDate = pickedDate;
+      _recordIndexPacket = null;
+      _eventsLoading = true;
+    });
+    await _loadRecordIndex();
   }
 
   Widget _listContainer() {
@@ -736,22 +653,18 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
 
   ListView _eventList() {
     return ListView.builder(
-      itemCount: _recordIndexPacket?.list.length ?? 0,
-      itemBuilder: (context, index) {
-        return _buildTapItem(
-          _recordIndexPacket!.list[index],
-          isFirst: index == 0,
-          isLast: index == _recordIndexPacket!.list.length - 1,
-        );
-      },
-    );
+        itemCount: _recordIndexPacket?.list.length ?? 0,
+        itemBuilder: (context, index) {
+          return _buildTapItem(
+            _recordIndexPacket!.list[index],
+            isFirst: index == 0,
+            isLast: index == _recordIndexPacket!.list.length - 1,
+          );
+        });
   }
 
-  Widget _buildTapItem(
-    CloudRecordIndex record, {
-    bool isFirst = false,
-    bool isLast = false,
-  }) {
+  Widget _buildTapItem(CloudRecordIndex record,
+      {bool isFirst = false, bool isLast = false}) {
     return _buildItem(record, isFirst: isFirst, isLast: isLast);
   }
 
@@ -795,7 +708,7 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              "${_deviceTimeZone.formatTimeMilliseconds(record.startTimestampSecond * 1000)} - ${_deviceTimeZone.formatTimeMilliseconds(record.endTimestampSecond * 1000)}",
+                              "${_deviceTimeZone.formatTimestamp(record.startTimestampSecond * 1000)} - ${_deviceTimeZone.formatTimestamp(record.endTimestampSecond * 1000)}",
                               style: const TextStyle(
                                 color: SampleThemeConfigure.colorTextPrimary,
                                 fontSize: 15,
@@ -891,11 +804,8 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: const [
-          Icon(
-            Icons.event_note,
-            size: 50,
-            color: SampleThemeConfigure.colorPrimary,
-          ),
+          Icon(Icons.event_note,
+              size: 50, color: SampleThemeConfigure.colorPrimary),
           SizedBox(height: 10),
           Text(
             '没有录像',
@@ -910,6 +820,14 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
   }
 
   Widget _buildVideoPlayerBody(double screenWidth) {
+    if (_cameraCount == 4) {
+      return buildFourCameraGrid([
+        _player.texture(),
+        _player1!.texture(),
+        _player2!.texture(),
+        _player3!.texture(),
+      ]);
+    }
     final double smallPlayerWidth = (screenWidth * 0.4).clamp(120.0, 180.0);
     final double smallPlayerHeight = smallPlayerWidth * 9 / 16;
 
@@ -953,8 +871,6 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
               ),
             ),
           ),
-        if (_currentRenderState == RenderState.buffering && _recordClicked)
-          createBufferingWidget(),
       ],
     );
   }
@@ -968,43 +884,67 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
     _deviceId = widget.deviceId;
     _deviceName = widget.deviceName;
     _cameraCount = widget.cameraCount;
+    _deviceTimeZone = CloudReplayTimeZone.clientLocal();
+    _selectedDate = _deviceTimeZone.now();
     _preparePlayer();
 
-    if (_applyDeviceTimeZone(widget.deviceTimezone, source: 'list_cache')) {
-      _loadRecordIndex();
+    final prefetchedTimezone = widget.deviceTimezone;
+    if (prefetchedTimezone != null) {
+      _applyDeviceTimezone(prefetchedTimezone, initializeDate: true);
+      Logging.i(
+        _tag,
+        '[device_timezone] device_id=$_deviceId, source=list_cache, '
+        'raw=${prefetchedTimezone.timezone}, '
+        'device_time=${prefetchedTimezone.deviceTime}, '
+        'offset_min=${_deviceTimeZone.offset.inMinutes}',
+      );
+      unawaited(_loadRecordIndex());
     } else {
-      _loadDeviceTimeZone();
+      unawaited(_loadDeviceTimezoneAndRecords());
     }
   }
 
   @override
   void dispose() {
-    super.dispose();
-
     Logging.i(_tag, "dispose ...");
+
+    WidgetsBinding.instance.removeObserver(this);
+
+    // Native stop/destroy operations may synchronously emit callbacks. Detach
+    // UI listeners before releasing the players so they cannot call setState.
+    _player.onRenderState = (_) {};
+    _player.onPresentationTimestamp = (_) {};
+    _player.onUniversalTimestamp = (_) {};
 
     _player.mute(true);
     _player1?.mute(true);
     _player2?.mute(true);
+    _player3?.mute(true);
 
+    _player3?.stop();
     _player2?.stop();
     _player1?.stop();
     _stream.stop();
     _player.stop();
-    _streamOfDownload.stop();
+    _isDownloading = false;
     for (final capture in _downloadCaptures) {
+      capture.onState = (_, __) {};
+      capture.onProgress = (_) {};
       capture.stop();
     }
+    _streamOfDownload.onRetrieveError = (_) {};
+    _streamOfDownload.onComplete = () {};
+    _streamOfDownload.stop();
 
+    _player3?.destroy();
     _player2?.destroy();
     _player1?.destroy();
     _player.destroy();
     _stream.destroy();
     _streamOfDownload.destroy();
 
-    WidgetsBinding.instance.removeObserver(this);
-
     Logging.i(_tag, "dispose done");
+    super.dispose();
   }
 
   void _preparePlayer() {
@@ -1075,21 +1015,41 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
     _player.prepare(providerPtr);
     _player.onRenderState = (state) {
       if (!mounted) return;
-      if (state == RenderState.completed) {
-        Logging.i(
+      final previousTimestampInMs = _currentTimestampInMs;
+      if (state == RenderState.completed && !_canAcceptPlaybackCompleted()) {
+        Logging.w(
           _tag,
-          '[playback_completed] generation=${_playbackTimeline.generation}, current_uts_ms=$_currentTimestampInMs, end_uts_ms=$_currentPartEndTimestampInMs, remaining_ms=${math.max(0, _currentPartEndTimestampInMs - _currentTimestampInMs)}, last_pts_ms=${_lastAcceptedPtsInMs ?? 0}, last_uts_ms=${_lastAcceptedUtsInMs ?? 0}, device_tz=${_deviceTimeZone.rawValue}',
+          '[playback_completed_ignored] current_uts_ms='
+          '$previousTimestampInMs, last_uts_ms=$_lastAcceptedUtsInMs, '
+          'start_uts_ms=$_currentPartStartTimestampInMs, '
+          'end_uts_ms=$_currentPartEndTimestampInMs',
         );
+        return;
       }
       setState(() {
         _currentRenderState = state;
-        if (state == RenderState.completed) {
+        if (state == RenderState.completed &&
+            _currentPartEndTimestampInMs > 0) {
           _currentTimestampInMs = _currentPartEndTimestampInMs;
           _seekPosition =
-              _currentPartEndTimestampInMs - _currentPartStartTimestampInMs;
+              (_currentPartEndTimestampInMs - _currentPartStartTimestampInMs)
+                  .clamp(0, 0x7fffffff)
+                  .toInt();
           _seekDragging = false;
         }
       });
+      if (state == RenderState.completed) {
+        Logging.i(
+          _tag,
+          '[playback_completed] current_uts_ms=$previousTimestampInMs, '
+          'end_uts_ms=$_currentPartEndTimestampInMs, '
+          'remaining_ms=${math.max(0, _currentPartEndTimestampInMs - previousTimestampInMs)}, '
+          'last_pts_ms=$_lastAcceptedPtsInMs, '
+          'last_uts_ms=$_lastAcceptedUtsInMs, '
+          'device_tz_offset_min=${_deviceTimeZone.offset.inMinutes}, '
+          'device_tz_raw=${_deviceTimeZone.rawValue}',
+        );
+      }
     };
 
     if (_cameraCount > 1) {
@@ -1107,112 +1067,187 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
       _player2!.enableAudio(false);
       _player2!.bindingPrimaryPlayer(_player);
     }
+
+    if (_cameraCount > 3) {
+      final providerPtr3 = _stream.provider(cameraIndex: 3)!;
+      _player3 = _createSamplePlayer();
+      _player3!.prepare(providerPtr3);
+      _player3!.enableAudio(false);
+      _player3!.bindingPrimaryPlayer(_player);
+    }
   }
 
   void _bindPlaybackTimeline(int generation) {
     _pendingPtsInMs = null;
     _lastAcceptedPtsInMs = null;
     _lastAcceptedUtsInMs = null;
-    _player.onPresentationTimestamp = (timestampInMs) {
+    _player.onPresentationTimestamp = (timestamp) {
       if (generation == _playbackTimeline.generation) {
-        _pendingPtsInMs = timestampInMs;
+        _pendingPtsInMs = timestamp;
       }
     };
-    _player.onUniversalTimestamp = (timestampInMs) {
-      if (!mounted) return;
-      final ptsInMs = _pendingPtsInMs ?? 0;
-      _pendingPtsInMs = null;
+    _player.onUniversalTimestamp = (timestamp) {
+      final ptsInMs = _pendingPtsInMs;
       final decision = _playbackTimeline.evaluate(
-        ptsInMs: ptsInMs,
-        utsInMs: timestampInMs,
+        ptsInMs: ptsInMs ?? 0,
+        utsInMs: timestamp,
         callbackGeneration: generation,
       );
-      final acceptedTimestampInMs = decision.timestampInMs;
-      if (acceptedTimestampInMs == null) {
-        if (decision.droppedCount == 1) {
-          Logging.w(
+      if (decision.timestampInMs == null) {
+        Logging.w(
             _tag,
-            '[uts_drop] generation=$generation, current_generation=${_playbackTimeline.generation}, reason=${decision.dropReason?.name}, pts_ms=$ptsInMs, uts_ms=$timestampInMs',
-          );
-        }
+            '[uts_drop] generation=$generation, '
+            'reason=${decision.dropReason}, pts_ms=$ptsInMs, uts_ms=$timestamp, '
+            'dropped=${decision.droppedCount}');
         return;
       }
+      _lastAcceptedPtsInMs = ptsInMs;
+      _lastAcceptedUtsInMs = timestamp;
       if (decision.firstAccepted) {
         Logging.i(
-          _tag,
-          '[pts_gate_opened] generation=$generation, first_pts_ms=$ptsInMs, first_uts_ms=$timestampInMs, start_uts_ms=$acceptedTimestampInMs, dropped=${decision.droppedCount}',
-        );
+            _tag,
+            '[pts_gate_opened] generation=$generation, '
+            'pts_ms=$ptsInMs, uts_ms=$timestamp');
       }
       final anomaly = decision.utsAnomaly;
-      if (anomaly != null && anomaly.count == 1) {
+      if (anomaly != null) {
         Logging.w(
-          _tag,
-          '[uts_anomaly] generation=$generation, kind=${anomaly.kind.name}, previous_uts_ms=${anomaly.previousTimestampInMs}, uts_ms=${anomaly.timestampInMs}, pts_delta_ms=${anomaly.ptsDeltaInMs}, uts_delta_ms=${anomaly.utsDeltaInMs}, count=${anomaly.count}',
-        );
+            _tag,
+            '[uts_anomaly] generation=$generation, '
+            'kind=${anomaly.kind}, previous_uts_ms=${anomaly.previousTimestampInMs}, '
+            'uts_ms=${anomaly.timestampInMs}, pts_delta_ms=${anomaly.ptsDeltaInMs}, '
+            'uts_delta_ms=${anomaly.utsDeltaInMs}, count=${anomaly.count}');
       }
-      _lastAcceptedPtsInMs = ptsInMs;
-      _lastAcceptedUtsInMs = timestampInMs;
-      setState(() => _currentTimestampInMs = acceptedTimestampInMs);
+      if (!mounted || generation != _playbackTimeline.generation) return;
+      setState(() {
+        _currentTimestampInMs = decision.timestampInMs!;
+      });
     };
   }
 
-  Future<void> _loadDeviceTimeZone() async {
-    final response = await SpecService.timezone(_deviceId);
-    if (!mounted) return;
-    if (!response.success ||
-        !_applyDeviceTimeZone(response.data, source: 'detail_request')) {
-      final rawTimeZone = response.data?.timezone ?? '';
-      Logging.w(
+  bool _canAcceptPlaybackCompleted() {
+    return CloudReplayCompletionPolicy.matchesActiveRecord(
+      recordSelected: _recordClicked,
+      startTimestampInMs: _currentPartStartTimestampInMs,
+      endTimestampInMs: _currentPartEndTimestampInMs,
+      lastPresentedTimestampInMs: _lastAcceptedUtsInMs ?? 0,
+      toleranceInMs: _completionTimestampToleranceMs,
+    );
+  }
+
+  Future<void> _loadDeviceTimezoneAndRecords() async {
+    final dateSelectionGeneration = _dateSelectionGeneration;
+    try {
+      final response = await SpecService.timezone(_deviceId);
+      if (response.success && response.data != null) {
+        final timezone = response.data!;
+        _applyDeviceTimezone(
+          timezone,
+          initializeDate: _dateSelectionGeneration == dateSelectionGeneration,
+        );
+        Logging.i(
+          _tag,
+          '[device_timezone] device_id=$_deviceId, '
+          'raw=${timezone.timezone}, device_time=${timezone.deviceTime}, '
+          'offset_min=${_deviceTimeZone.offset.inMinutes}, '
+          'source=${_deviceTimeZone.source}, '
+          'client_tz=${DateTime.now().timeZoneName}, '
+          'client_offset_min=${DateTime.now().timeZoneOffset.inMinutes}',
+        );
+      } else {
+        Logging.w(
+          _tag,
+          '[device_timezone] device_id=$_deviceId, fallback=client, '
+          'code=${response.code}, message=${response.message}',
+        );
+      }
+    } catch (error, stackTrace) {
+      Logging.e(
         _tag,
-        '[device_timezone] device_id=$_deviceId, fallback=${_deviceTimeZone.rawValue}, raw=$rawTimeZone, code=${response.code}, message=${response.message ?? ''}',
+        '[device_timezone] device_id=$_deviceId, fallback=client, '
+        'error=$error\n$stackTrace',
       );
     }
+    if (!mounted) return;
     setState(() {});
-    _loadRecordIndex();
+    await _loadRecordIndex();
   }
 
-  bool _applyDeviceTimeZone(Timezone? timezone, {required String source}) {
-    final rawTimeZone = timezone?.timezone ?? '';
-    final resolvedTimeZone = CloudReplayDeviceTimeZone.parse(
-      rawTimeZone,
-      deviceTime: timezone?.deviceTime,
+  void _applyDeviceTimezone(Timezone timezone, {required bool initializeDate}) {
+    _deviceTimeRaw = timezone.deviceTime;
+    _deviceTimeZone = CloudReplayTimeZone.resolve(
+      rawValue: timezone.timezone,
+      deviceTime: timezone.deviceTime,
+      fallbackOffset: DateTime.now().timeZoneOffset,
     );
-    if (resolvedTimeZone == null) return false;
+    if (initializeDate) {
+      _selectedDate = _deviceTimeZone.now();
+    }
+  }
 
-    _deviceTimeZone = resolvedTimeZone;
-    final deviceNow = resolvedTimeZone.dateTimeFromEpochMilliseconds(
-      DateTime.now().millisecondsSinceEpoch,
-    );
-    _todayDate = deviceNow;
-    _selectedDate = DateTime(deviceNow.year, deviceNow.month, deviceNow.day);
+  Future<void> _loadRecordIndex() async {
+    final requestGeneration = ++_recordIndexRequestGeneration;
+    final date = _selectedDate.toStandardDate();
     Logging.i(
       _tag,
-      '[device_timezone] device_id=$_deviceId, source=$source, offset_seconds=${resolvedTimeZone.offsetSeconds}, raw=$rawTimeZone, device_time=${timezone?.deviceTime ?? ''}, client_tz=${DateTime.now().timeZoneName}',
+      '[record_index] date=$date, device_tz_offset_min='
+      '${_deviceTimeZone.offset.inMinutes}, '
+      'device_tz_raw=${_deviceTimeZone.rawValue}',
     );
-    return true;
-  }
-
-  void _loadRecordIndex() async {
-    final date = '${_selectedDate.year.toString().padLeft(4, '0')}-'
-        '${_selectedDate.month.toString().padLeft(2, '0')}-'
-        '${_selectedDate.day.toString().padLeft(2, '0')}';
-    final response = await StorageService.listRecords(_deviceId, date);
-    if (response.success) {
-      _recordIndexPacket = response.data;
-      if (_recordIndexPacket?.list.isNotEmpty == true) {
-        _recordIndexPacket!.list = _recordIndexPacket!.list.reversed.toList();
+    try {
+      final response = await StorageService.listRecords(_deviceId, date);
+      if (!mounted || requestGeneration != _recordIndexRequestGeneration) {
+        Logging.i(
+          _tag,
+          '[record_index_ignored] date=$date, request_generation='
+          '$requestGeneration, latest_generation=$_recordIndexRequestGeneration',
+        );
+        return;
       }
-    }
+      if (response.success) {
+        _recordIndexPacket = response.data;
+        if (_recordIndexPacket?.list.isNotEmpty == true) {
+          _recordIndexPacket!.list = _recordIndexPacket!.list.reversed.toList();
+        }
+      } else {
+        _recordIndexPacket = null;
+        Logging.w(
+          _tag,
+          '[record_index_failed] date=$date, code=${response.code}, '
+          'message=${response.message}',
+        );
+      }
 
-    if (!mounted) return;
-    setState(() {
-      _eventsLoading = false;
-    });
+      setState(() {
+        _eventsLoading = false;
+      });
+    } catch (error, stackTrace) {
+      if (!mounted || requestGeneration != _recordIndexRequestGeneration) {
+        return;
+      }
+      Logging.e(
+        _tag,
+        '[record_index_error] date=$date, error=$error\n$stackTrace',
+      );
+      setState(() {
+        _recordIndexPacket = null;
+        _eventsLoading = false;
+      });
+    }
   }
 
   void _onPlayRecord(CloudRecordIndex record) async {
     final startTimestampInMs = record.startTimestampSecond * 1000;
     final endTimestampInMs = record.endTimestampSecond * 1000;
+
+    // Drain callbacks from the previous record before binding the next
+    // playback generation.
+    _player.stop();
+    _player1?.stop();
+    _player2?.stop();
+    _player3?.stop();
+    _stream.stop();
+
     final generation = _playbackTimeline.begin(
       startTimestampInMs: startTimestampInMs,
       endTimestampInMs: endTimestampInMs,
@@ -1223,30 +1258,41 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
       _recordClicked = true;
       _currentRenderState = RenderState.buffering;
       _seekDragging = false;
-      _currentTimestampInMs = startTimestampInMs;
+      _seekPosition = 0;
       _currentPartStartTimestampInMs = startTimestampInMs;
       _currentPartEndTimestampInMs = endTimestampInMs;
-      _seekPosition = 0;
+      _currentTimestampInMs = startTimestampInMs;
     });
-    Logging.i(
-      _tag,
-      '[playback_start] generation=$generation, start_uts_ms=$startTimestampInMs, end_uts_ms=$endTimestampInMs, storage_id=${record.storageId}, device_tz=${_deviceTimeZone.rawValue}',
-    );
 
-    _player.stop();
-    _player1?.stop();
-    _player2?.stop();
-    _stream.stop();
     _stream.prepare(
       record.startTimestampSecond,
       record.endTimestampSecond,
       record.storageId,
       fileNameList: record.isTimelapse ? record.files : null,
+      replayMode: record.isTimelapse
+          ? CloudReplayMode.timelapse
+          : CloudReplayMode.normal,
     );
     _stream.start();
+
     _player.start();
+
     _player1?.start();
+
     _player2?.start();
+    _player3?.start();
+
+    Logging.i(
+      _tag,
+      '[play_record] generation=$generation, '
+      'start_uts_ms=$_currentPartStartTimestampInMs, '
+      'end_uts_ms=$_currentPartEndTimestampInMs, '
+      'storage_id=${record.storageId}, '
+      'device_tz_offset_min=${_deviceTimeZone.offset.inMinutes}, '
+      'device_tz_raw=${_deviceTimeZone.rawValue}, '
+      'device_time=$_deviceTimeRaw, '
+      'client_tz=${DateTime.now().timeZoneName}',
+    );
   }
 
   void _onDownloadRecord(CloudRecordIndex record) async {
@@ -1380,4 +1426,130 @@ class _CloudReplayPageState extends LifecycleAwareState<CloudReplayPage>
 
   String _recordDownloadKey(CloudRecordIndex record) =>
       "${record.storageId}:${record.startTimestampSecond}:${record.endTimestampSecond}";
+}
+
+class _CloudReplaySliderThumbShape extends SliderComponentShape {
+  static const double _width = 36;
+  static const double _height = 24;
+
+  const _CloudReplaySliderThumbShape();
+
+  @override
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) =>
+      const Size(_width, _height);
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset center, {
+    required Animation<double> activationAnimation,
+    required Animation<double> enableAnimation,
+    required bool isDiscrete,
+    required TextPainter labelPainter,
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required TextDirection textDirection,
+    required double value,
+    required double textScaleFactor,
+    required Size sizeWithOverflow,
+  }) {
+    final rect = Rect.fromCenter(
+      center: center,
+      width: _width,
+      height: _height,
+    );
+    final shape = RRect.fromRectAndRadius(
+      rect,
+      const Radius.circular(_height / 2),
+    );
+    final path = Path()..addRRect(shape);
+    context.canvas.drawShadow(path, Colors.black45, 4, true);
+    context.canvas.drawRRect(
+      shape,
+      Paint()..color = sliderTheme.thumbColor ?? Colors.white,
+    );
+  }
+}
+
+class _CloudReplaySliderTrackShape extends SliderTrackShape {
+  const _CloudReplaySliderTrackShape();
+
+  @override
+  bool get isRounded => true;
+
+  @override
+  Rect getPreferredRect({
+    required RenderBox parentBox,
+    Offset offset = Offset.zero,
+    required SliderThemeData sliderTheme,
+    bool isEnabled = false,
+    bool isDiscrete = false,
+  }) {
+    final height = sliderTheme.trackHeight ?? 0;
+    return Rect.fromLTWH(
+      offset.dx,
+      offset.dy + (parentBox.size.height - height) / 2,
+      parentBox.size.width,
+      height,
+    );
+  }
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset offset, {
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required Animation<double> enableAnimation,
+    required TextDirection textDirection,
+    required Offset thumbCenter,
+    Offset? secondaryOffset,
+    bool isDiscrete = false,
+    bool isEnabled = false,
+  }) {
+    final trackRect = getPreferredRect(
+      parentBox: parentBox,
+      offset: offset,
+      sliderTheme: sliderTheme,
+      isEnabled: isEnabled,
+      isDiscrete: isDiscrete,
+    );
+    if (trackRect.height <= 0) return;
+    final paintedTrackRect = Rect.fromLTWH(
+      offset.dx,
+      trackRect.top,
+      parentBox.size.width,
+      trackRect.height,
+    );
+
+    final activeColor = ColorTween(
+      begin: sliderTheme.disabledActiveTrackColor,
+      end: sliderTheme.activeTrackColor,
+    ).evaluate(enableAnimation)!;
+    final inactiveColor = ColorTween(
+      begin: sliderTheme.disabledInactiveTrackColor,
+      end: sliderTheme.inactiveTrackColor,
+    ).evaluate(enableAnimation)!;
+    final inactivePaint = Paint()
+      ..color = inactiveColor
+      ..strokeWidth = trackRect.height
+      ..strokeCap = StrokeCap.round;
+    final activePaint = Paint()
+      ..color = activeColor
+      ..strokeWidth = trackRect.height
+      ..strokeCap = StrokeCap.round;
+
+    context.canvas.drawLine(
+      paintedTrackRect.centerLeft,
+      paintedTrackRect.centerRight,
+      inactivePaint,
+    );
+    context.canvas.drawLine(
+      textDirection == TextDirection.ltr
+          ? paintedTrackRect.centerLeft
+          : paintedTrackRect.centerRight,
+      thumbCenter,
+      activePaint,
+    );
+  }
 }

@@ -9,23 +9,27 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends LifecycleAwareState<RegisterPage> {
   bool _codeSent = false;
+  bool _sendingCode = false;
 
   final TextEditingController _accountController = TextEditingController();
   final TextEditingController _codeController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _ensurePasswordController = TextEditingController();
+  final TextEditingController _ensurePasswordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: SampleThemeConfigure.colorPrimary),
+          icon: const Icon(Icons.arrow_back,
+              color: SampleThemeConfigure.colorPrimary),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
-        title: const Text('注册新账号', style: TextStyle(color: SampleThemeConfigure.colorPrimary)),
+        title: const Text('注册新账号',
+            style: TextStyle(color: SampleThemeConfigure.colorPrimary)),
         backgroundColor: SampleThemeConfigure.colorBackground,
       ),
       body: _buildPageBody(),
@@ -67,7 +71,7 @@ class _RegisterPageState extends LifecycleAwareState<RegisterPage> {
           ),
           const SizedBox(width: 10),
           ElevatedButton(
-            onPressed: _sendVerificationCode,
+            onPressed: _sendingCode ? null : _sendVerificationCode,
             style: ElevatedButton.styleFrom(
               backgroundColor: SampleThemeConfigure.colorPrimary,
               foregroundColor: SampleThemeConfigure.colorForeground,
@@ -87,6 +91,7 @@ class _RegisterPageState extends LifecycleAwareState<RegisterPage> {
   }
 
   void _sendVerificationCode() async {
+    if (_sendingCode) return;
     if (_codeSent) {
       SnackTips.show(context, "验证码已发送");
       return;
@@ -98,16 +103,28 @@ class _RegisterPageState extends LifecycleAwareState<RegisterPage> {
       return;
     }
 
-    final resp = await AccountService.verificationCodeForRegister(account);
-    if (!mounted) return;
-    if (resp.success) {
-      SnackTips.show(context, "验证码已发送");
+    setState(() {
+      _sendingCode = true;
+    });
 
-      setState(() {
-        _codeSent = true;
-      });
-    } else {
-      SnackTips.show(context, "发送验证码失败: \n[${resp.code}] ${resp.message}");
+    try {
+      final resp = await AccountService.verificationCodeForRegister(account);
+      if (!mounted) return;
+      if (resp.success) {
+        SnackTips.show(context, "验证码已发送");
+
+        setState(() {
+          _codeSent = true;
+        });
+      } else {
+        SnackTips.show(context, "发送验证码失败: \n[${resp.code}] ${resp.message}");
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _sendingCode = false;
+        });
+      }
     }
   }
 
@@ -146,7 +163,8 @@ class _RegisterPageState extends LifecycleAwareState<RegisterPage> {
       return;
     }
 
-    await SharedPreferencesUtil.instance.setString(SampleConstants.storageKeyLoginAccount, account);
+    await SharedPreferencesUtil.instance
+        .setString(SampleConstants.storageKeyLoginAccount, account);
 
     if (!mounted) return;
 
@@ -223,7 +241,8 @@ class _RegisterPageState extends LifecycleAwareState<RegisterPage> {
   OutlineInputBorder _buildOutlineInputBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
-      borderSide: const BorderSide(color: SampleThemeConfigure.colorPrimary, width: 1.0),
+      borderSide: const BorderSide(
+          color: SampleThemeConfigure.colorPrimary, width: 1.0),
     );
   }
 }

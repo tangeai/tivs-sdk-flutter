@@ -17,6 +17,7 @@ import { FlutterAbility, FlutterEngine } from '@ohos/flutter_ohos';
 import { GeneratedPluginRegistrant } from '../plugins/GeneratedPluginRegistrant';
 import NotificationPlugin from './NotificationPlugin';
 import PreferencesPlugin from './PreferencesPlugin';
+import HarmonyQrScannerPlugin from './HarmonyQrScannerPlugin';
 
 export default class EntryAbility extends FlutterAbility {
   configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -26,5 +27,6 @@ export default class EntryAbility extends FlutterAbility {
     // REGISTER YOUR PLATFORM CHANNEL IMPLs
     this.addPlugin(new NotificationPlugin());
     this.addPlugin(new PreferencesPlugin());
+    this.addPlugin(new HarmonyQrScannerPlugin());
   }
 }

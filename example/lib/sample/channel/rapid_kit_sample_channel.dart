@@ -12,3 +12,4 @@ import '../utils/rapid_kit_sample_util.dart';
 part 'notification.dart';
 part 'preference.dart';
 part 'screen_awake.dart';
+part 'harmony_qr_scanner.dart';

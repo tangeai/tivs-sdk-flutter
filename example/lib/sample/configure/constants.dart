@@ -4,6 +4,8 @@ class SampleConstants {
   static const String defaultRapidAppID = String.fromEnvironment('RAPID_APP_ID');
   static const String defaultRapidPackageName =
       String.fromEnvironment('RAPID_PACKAGE_NAME');
+  static const String productionRapidAppID = "5920020";
+  static const String productionRapidPackageName = "com.tange365.icam365";
   static const String storageKeyAppConfigAppId = "rapid_sample_app_id";
   static const String storageKeyAppConfigPackageName =
       "rapid_sample_package_name";

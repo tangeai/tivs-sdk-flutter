@@ -31,6 +31,7 @@ class _ComposePageState extends LifecycleAwareState<ComposePage>
   late TabController _tabController;
   final GlobalKey<_LiveStreamWidgetState> _liveStreamKey = GlobalKey();
   final GlobalKey<_LocalReplayWidgetState> _localReplayKey = GlobalKey();
+  late final LocalReplayPlaybackController _localReplayController;
 
   bool _pageActive = false;
   int _currentIndex = 0;
@@ -55,6 +56,7 @@ class _ComposePageState extends LifecycleAwareState<ComposePage>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_onTabChanged);
+    _localReplayController = LocalReplayPlaybackController();
 
     _autoScheduler = AutoActionScheduler(
       onAction: () {
@@ -67,6 +69,7 @@ class _ComposePageState extends LifecycleAwareState<ComposePage>
   @override
   void dispose() {
     _autoScheduler.stop();
+    _localReplayController.dispose();
     _tabController.removeListener(_onTabChanged);
     _tabController.dispose();
     super.dispose();
@@ -89,7 +92,17 @@ class _ComposePageState extends LifecycleAwareState<ComposePage>
     final oldIndex = _currentIndex;
     Logging.i(ComposePage.tag,
         '[tabChanged] ${_tabName(oldIndex)} -> ${_tabName(newIndex)}');
-    setState(() => _currentIndex = newIndex);
+    _currentIndex = newIndex;
+    _syncLocalReplayPlayback();
+    setState(() {});
+  }
+
+  void _syncLocalReplayPlayback() {
+    if (_isTabActive(_tabIndexLocalReplay)) {
+      _localReplayController.start();
+    } else {
+      _localReplayController.stop();
+    }
   }
 
   @override
@@ -97,7 +110,9 @@ class _ComposePageState extends LifecycleAwareState<ComposePage>
     if (_pageActive) {
       return;
     }
-    setState(() => _pageActive = true);
+    _pageActive = true;
+    _syncLocalReplayPlayback();
+    setState(() {});
     if (_autoTestMode) {
       _autoScheduler.start();
     }
@@ -109,7 +124,9 @@ class _ComposePageState extends LifecycleAwareState<ComposePage>
     if (!_pageActive) {
       return;
     }
-    setState(() => _pageActive = false);
+    _pageActive = false;
+    _syncLocalReplayPlayback();
+    setState(() {});
   }
 
   @override
@@ -210,7 +227,7 @@ class _ComposePageState extends LifecycleAwareState<ComposePage>
             deviceName: widget.deviceName,
             cameraCount: widget.cameraCount,
             deviceAbilities: widget.deviceAbilities,
-            active: _isTabActive(_tabIndexLocalReplay),
+            playbackController: _localReplayController,
           ),
         ],
       ),

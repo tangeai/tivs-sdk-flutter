@@ -66,8 +66,8 @@ class _ConfigurePageState extends LifecycleAwareState<ConfigurePage> {
   }
 
   void _applyProdConfig() {
-    _idController.text = "5920020";
-    _packageNameController.text = "com.tange365.icam365";
+    _idController.text = SampleConstants.productionRapidAppID;
+    _packageNameController.text = SampleConstants.productionRapidPackageName;
     _apiEnv = 0;
     _onSubmit();
   }

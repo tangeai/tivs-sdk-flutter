@@ -249,6 +249,8 @@ Widget _buildIconButtons(BuildContext context) {
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
       IconButton(
+        key: const ValueKey('rapid-home-account-action'),
+        tooltip: '账户与设置',
         icon: const Icon(Icons.account_circle_rounded,
             size: 36, color: SampleThemeConfigure.colorPrimary),
         onPressed: () {

@@ -501,12 +501,12 @@ void _navigateToSimpleRtc(BuildContext context, Primary primary) {
   );
 }
 
-void _handleOnTap(Primary primary, BuildContext context) {
-  if (!context.mounted) return;
+void _handleOnTap(Primary primary, BuildContext pageContext) {
+  if (!pageContext.mounted) return;
 
   showDialog(
-    context: context,
-    builder: (BuildContext context) {
+    context: pageContext,
+    builder: (BuildContext dialogContext) {
       return AlertDialog(
         title: const Text(
           "选择页面",
@@ -527,12 +527,15 @@ void _handleOnTap(Primary primary, BuildContext context) {
                 title: const Text('Receive monitor'),
                 subtitle: const Text('Audio and camera receive stability'),
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => ReceiveMonitorPage(
-                    deviceId: primary.deviceId ?? '',
-                    cameraCount: recognizedCameraCount(primary),
-                    deviceAbilities: primary.deviceAbilities,
-                  )));
+                  Navigator.pop(dialogContext);
+                  Navigator.push(
+                      pageContext,
+                      MaterialPageRoute(
+                          builder: (_) => ReceiveMonitorPage(
+                                deviceId: primary.deviceId ?? '',
+                                cameraCount: recognizedCameraCount(primary),
+                                deviceAbilities: primary.deviceAbilities,
+                              )));
                 },
               ),
               const Divider(height: 1),
@@ -557,8 +560,8 @@ void _handleOnTap(Primary primary, BuildContext context) {
                   ),
                 ),
                 onTap: () {
-                  Navigator.pop(context);
-                  _navigateToLivePage(context, primary);
+                  Navigator.pop(dialogContext);
+                  _navigateToLivePage(pageContext, primary);
                 },
               ),
               const Divider(height: 1),
@@ -583,8 +586,8 @@ void _handleOnTap(Primary primary, BuildContext context) {
                   ),
                 ),
                 onTap: () {
-                  Navigator.pop(context);
-                  _openCallLivePage(context, primary);
+                  Navigator.pop(dialogContext);
+                  _openCallLivePage(pageContext, primary);
                 },
               ),
               const Divider(height: 1),
@@ -609,8 +612,8 @@ void _handleOnTap(Primary primary, BuildContext context) {
                   ),
                 ),
                 onTap: () {
-                  Navigator.pop(context);
-                  _navigateToComposePage(context, primary);
+                  Navigator.pop(dialogContext);
+                  _navigateToComposePage(pageContext, primary);
                 },
               ),
               const Divider(height: 1),
@@ -635,8 +638,8 @@ void _handleOnTap(Primary primary, BuildContext context) {
                   ),
                 ),
                 onTap: () {
-                  Navigator.pop(context);
-                  _navigateToSimpleLive(context, primary);
+                  Navigator.pop(dialogContext);
+                  _navigateToSimpleLive(pageContext, primary);
                 },
               ),
               const Divider(height: 1),
@@ -661,8 +664,8 @@ void _handleOnTap(Primary primary, BuildContext context) {
                   ),
                 ),
                 onTap: () {
-                  Navigator.pop(context);
-                  _navigateToSimpleRtc(context, primary);
+                  Navigator.pop(dialogContext);
+                  _navigateToSimpleRtc(pageContext, primary);
                 },
               ),
             ],
@@ -670,7 +673,7 @@ void _handleOnTap(Primary primary, BuildContext context) {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text(
               "取消",
               style: TextStyle(color: Colors.grey),
@@ -810,12 +813,20 @@ void _onEditDeviceName(
 }
 
 int recognizedCameraCount(Primary primary) {
-  int cameraCount = 1;
-  if (primary.deviceAttributes?.contains("ipc-2ch") == true ||
-      primary.deviceAbilities?.contains("2-composed") == true) {
-    cameraCount = 2;
-  } else if (primary.deviceAbilities?.contains("3-composed") == true) {
-    cameraCount = 3;
+  try {
+    final abilities = convert.jsonDecode(primary.deviceAbilities ?? '{}');
+    if (abilities is Map) {
+      switch (abilities['MultiChannels']) {
+        case '4-composed':
+          return 4;
+        case '3-composed':
+          return 3;
+        case '2-composed':
+          return 2;
+      }
+    }
+  } on FormatException {
+    // Older devices may only report their channel count in category.
   }
-  return cameraCount;
+  return primary.deviceAttributes?.contains('ipc-2ch') == true ? 2 : 1;
 }

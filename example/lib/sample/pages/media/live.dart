@@ -67,33 +67,25 @@ class _LivePageState extends LifecycleAwareState<LivePage> {
 
   @override
   Widget build(BuildContext context) {
-    final liveStreamWidget = LiveStreamWidget(
-      key: _liveStreamKey,
-      deviceId: widget.deviceId,
-      deviceName: widget.deviceName,
-      cameraCount: widget.cameraCount,
-      lan: widget.lan,
-      deviceAbilities: widget.deviceAbilities,
-      active: _active,
-      onFullScreenChanged: _onFullScreenChanged,
-    );
-
-    if (_isFullScreen) {
-      return Scaffold(
-        key: const ValueKey('rapid-live-page-root'),
-        body: liveStreamWidget,
-      );
-    }
-
     return _scaffold(
       widget.deviceName.isEmpty ? widget.deviceId : widget.deviceName,
       context,
       KeyedSubtree(
         key: const ValueKey('rapid-live-page-root'),
-        child: liveStreamWidget,
+        child: LiveStreamWidget(
+          key: _liveStreamKey,
+          deviceId: widget.deviceId,
+          deviceName: widget.deviceName,
+          cameraCount: widget.cameraCount,
+          lan: widget.lan,
+          deviceAbilities: widget.deviceAbilities,
+          active: _active,
+          onFullScreenChanged: _onFullScreenChanged,
+        ),
       ),
       widget.deviceId,
       widget.deviceName,
+      showAppBar: !_isFullScreen,
     );
   }
 }

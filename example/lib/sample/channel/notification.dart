@@ -41,11 +41,20 @@ class NotificationChannel {
   static Future<String> getPushServiceToken() async {
     final String? result =
         await _methodChannel.invokeMethod<String>('getPushServiceToken');
-    if (result != null) {
-      return result;
-    } else {
-      throw Exception('Expected String but got null');
+    if (result == null || result.trim().isEmpty) {
+      throw PlatformException(
+        code: 'PUSH_TOKEN_EMPTY',
+        message: 'Push Kit returned an empty token',
+      );
     }
+    // Older native builds returned "errorCode,errorMessage" as a token.
+    if (RegExp(r'^\d+,').hasMatch(result)) {
+      throw PlatformException(
+        code: result.substring(0, result.indexOf(',')),
+        message: 'Push Kit failed to acquire a token',
+      );
+    }
+    return result;
   }
 
   static Future<Map<String, dynamic>?> getPushRegistration() async {
